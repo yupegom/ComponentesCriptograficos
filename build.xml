@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="MyTask" basedir="." default="use">
+
+    <property name="jar.dir" value="C:/Users/Fernando/Documents/My Dropbox/PruebaPathComponentesOZ/"/>
+	
+	<target name="use" description="Use the Task" >
+	        <taskdef name="compilefunctor" classname="oz.compile.functor.task.CompileFunctor" classpath="${jar.dir}${ant.project.name}.jar"/>
+	        <compilefunctor fileToProcess="compilarFunctores.compile"/>
+	    </target>
+
+</project>
