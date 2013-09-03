@@ -1,0 +1,34 @@
+functor
+import
+   Componente at 'file:../../AbstraccionComponente/Componente.ozf'
+   CargarArchivo
+   Browser
+export
+   gestorArchivo:IGestorArchivo
+define Servicio = {New  CargarArchivo.gestorArchivo init} ArchivoCargado
+   
+   proc {IGestorArchivo Flujo PuertoGestor}
+      {Componente.nuevoPuertoReq
+       proc{$Mensaje}
+	  case Mensaje of cargarArchivo(RutaArchivo ?Contenido) then
+	     try
+		ArchivoCargado = {Servicio cargarArchivo(RutaArchivo $)}
+%	      {Browser.browse {ArchivoCargado nombreArchivo($)}}
+		Contenido = {ArchivoCargado contenido($)}
+	     catch X then  {Browser.browse 'Excepción al Cargar ' #X# ' No se pudo abrir el archivo deseado.' }
+	     end
+	   
+	  [] almacenarArchivo(Nombre Contents) then
+	     try
+		{Servicio almacenarArchivo(Nombre Contents)}
+	     catch X then  {Browser.browse 'Excepción al almacenar ' #X# ' No se pudo abrir el archivo deseado.' }
+	     end
+	  [] _ then skip
+	    
+	  end
+       end Flujo PuertoGestor}
+   end
+end
+
+      
+		     

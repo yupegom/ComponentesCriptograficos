@@ -1,0 +1,15 @@
+ozc -c ComponenteMatematico/ComponenteMatematico.oz -o ComponenteMatematico/ComponenteMatematico.ozf
+ozc -c ComponenteMatematico/FuncionesAvanzadas.oz -o ComponenteMatematico/FuncionesAvanzadas.ozf
+ozc -c GestorNumeros/GestorNumeros.oz -o GestorNumeros/GestorNumeros.ozf
+ozc -c GestorNumeros/ServicioGeneradorNumero.oz -o GestorNumeros/ServicioGeneradorNumero.ozf
+ozc -c GeneradorClave/Clave.oz -o GeneradorClave/Clave.ozf
+ozc -c GeneradorClave/ClaveRSA.oz -o GeneradorClave/ClaveRSA.ozf
+ozc -c GeneradorClave/ClavePrivadaRSA.oz -o GeneradorClave/ClavePrivadaRSA.ozf
+ozc -c GeneradorClave/ClavePublicaRSA.oz -o GeneradorClave/ClavePublicaRSA.ozf
+ozc -c GeneradorClave/ServicioGeneradorClaves.oz -o GeneradorClave/ServicioGeneradorClaves.ozf
+ozc -c GeneradorClave/GeneradorClave.oz -o GeneradorClave/GeneradorClave.ozf
+ozc -c GestorArchivo/GestorArchivo.oz -o GestorArchivo/GestorArchivo.ozf
+ozc -c GestorArchivo/Archivo.oz -o GestorArchivo/Archivo.ozf
+ozc -c GestorArchivo/CargarArchivo.oz -o GestorArchivo/CargarArchivo.ozf
+ozc -c GestorArchivo/AlmacenarArchivo.oz -o GestorArchivo/AlmacenarArchivo.ozf
+ozc -c LibreriaCriptografica/LibreriaCriptografica.oz -o LibreriaCriptografica/LibreriaCriptografica.ozf

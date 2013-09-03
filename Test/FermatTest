@@ -1,0 +1,32 @@
+declare
+   fun {ModPow B E M} % exponentiation under modulo
+      A={NewCell 1} CB={NewCell B}
+      proc {Loop E}
+         if E>0 then
+            if (E mod 2)==1 then A:=(@A * @CB) mod M end
+            CB:=(@CB * @CB) mod M
+            {Loop (E div 2)}
+         end
+      end
+   in {Loop E} @A end
+
+   fun {RandIn P} % between (0..P) random generator
+      Y={OS.randLimits _ $}
+      fun {Rand X L}
+         C D=(P-1) div L
+         R=X+L*(if D>Y then C=true {OS.rand}
+                else C=false {OS.rand} mod D
+                end)
+      in
+         if C then {Rand R L*Y} else R+1 end
+      end
+   in {Rand 0 1} end
+   
+   fun {Fermat P K} %Fermat test
+      for I in 0..K default:true return:R do
+         if {ModPow {RandIn P} P-1 P} \= 1 then {R false} end
+      end
+   end
+
+   
+{Browse {ModPow 123 17 3233}}
