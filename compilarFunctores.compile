@@ -8,6 +8,8 @@ ozc -c GeneradorClave/ClavePrivadaRSA.oz -o GeneradorClave/ClavePrivadaRSA.ozf
 ozc -c GeneradorClave/ClavePublicaRSA.oz -o GeneradorClave/ClavePublicaRSA.ozf
 ozc -c GeneradorClave/ServicioGeneradorClaves.oz -o GeneradorClave/ServicioGeneradorClaves.ozf
 ozc -c GeneradorClave/GeneradorClave.oz -o GeneradorClave/GeneradorClave.ozf
+ozc -c GeneradorClave/OperacionesMatematicasService.oz -o GeneradorClave/OperacionesMatematicasService.ozf
+ozc -c GeneradorClave/GeneradorNumerosService.oz -o GeneradorClave/GeneradorNumerosService.ozf
 ozc -c GestorArchivo/GestorArchivo.oz -o GestorArchivo/GestorArchivo.ozf
 ozc -c GestorArchivo/Archivo.oz -o GestorArchivo/Archivo.ozf
 ozc -c GestorArchivo/CargarArchivo.oz -o GestorArchivo/CargarArchivo.ozf

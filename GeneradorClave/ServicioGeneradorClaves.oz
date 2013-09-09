@@ -5,16 +5,27 @@ import
    ClavePublicaRSA
    GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
    ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
-   %Browser
+   OperacionesMatematicasService
+   Browser
 export servicioGeneradorClaves:ServicioGeneradorClaves
 define 	 
    class ServicioGeneradorClaves
 
+      attr operacionesService generadorNumsService
       meth init
-	 skip
+	 operacionesService := {New OperacionesMatematicasService.servicioOperacionesMatematicas init}
+	 generadorNumsService := {New GeneradorNumerosService.servicioGeneradorNumeros init}
       end
 
-      meth generarClavesRSA(?LlaveRSA)
+      meth generarClave(TipoClaveAGenerar ?Clave)
+	 if TipoClaveAGenerar == 'RSA' then
+	    Clave = {self GenerarClavesRSA($)}
+	 else
+	    {Browser.browse 'Not yet implemented'}
+	 end
+      end
+      
+      meth GenerarClavesRSA(?LlaveRSA)
 	 ClavePrivada ClavePublica in
 	 
 	 ClavePrivada = {self GenerarClavePrivadaRSA($)}
@@ -25,12 +36,11 @@ define
 
       meth GenerarClavePrivadaRSA(?LlavePrivadaRSA)
 	 N E PhiN P = {NewCell 0} Q = {NewCell 0} PrimosRelativos = {NewCell false}
-	 PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
 	 proc{Loop PrimosRelativos}
 	    if @PrimosRelativos == false then
 	       P := {self ObtenerPrimo($)}
 	       Q := {self ObtenerPrimo($)}
-	       PrimosRelativos := {Send PuertoOpMatematicas verificarCoprimalidad(@P @Q $)}
+	       PrimosRelativos := {@operacionesService verificarCoprimalidad(P Q $)}
 	       {Loop PrimosRelativos}
 	    end
 	 
@@ -57,13 +67,7 @@ define
       end
 
       meth ObtenerPrimo(?Primo)
-	  
-	 Tamano = 100
-	 PuertoGeneradorNumeros = {GestorNumeros.gestorNumero _ $}
-	
-      in
-	 Primo = {Send PuertoGeneradorNumeros generarNumeroPrimo(Tamano $)}
- 	 
+	 Primo = {@generadorNumsService generarNumeroPrimo(100 $)}
       end
 
       meth ObtenerValorDeE(PhiN ?E)
@@ -77,11 +81,11 @@ define
 	 Eaux := {Send PuertoGeneradorNumeros generarAleatorioDentroDeRangoEspecifico(1 PhiN $)}
 	 PrimosRelativos = {Send PuertoOpMatematicas verificarCoprimalidad(@Eaux PhiN $)}
 	 if PrimosRelativos == true then
- 	    E = @Eaux
- 	 else
+	    E = @Eaux
+	 else
  	    %{Browser.browse 'No son primos relativos'}
- 	    {self ObtenerValorDeE(PhiN E)}
- 	 end
+	    {self ObtenerValorDeE(PhiN E)}
+	 end
 	 	 
       end
 

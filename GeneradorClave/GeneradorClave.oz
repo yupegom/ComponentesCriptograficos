@@ -5,18 +5,14 @@ import
    ServicioGeneradorClaves
 export
    generadorClave:IGeneradorClave
-define Servicio = {New  ServicioGeneradorClaves.servicioGeneradorClaves init}
+define
    proc {IGeneradorClave Flujo PuertoGenerador}
       {Componente.nuevoPuertoReq
-       proc{$Mensaje}
+       proc{$Mensaje} GeneradorClave = {New ServicioGeneradorClaves.servicioGeneradorClaves init} in
 	  case Mensaje of generarLlave(TipoClaveAGenerar ?Clave) then
 	     try
-		if TipoClaveAGenerar == 'RSA' then
-		   {Servicio generarClavesRSA(?Clave)}
-		else
-		   {Servicio generarClavesIDEA(?Clave)}
-		end
-	       
+		Clave = {GeneradorClave generarClave(TipoClaveAGenerar $)}
+					       
 	     catch X then  {Browser.browse 'Excepción al Generar ' #X# ' No se pudo crear la clave solicitada.' }
 	     end
 	  

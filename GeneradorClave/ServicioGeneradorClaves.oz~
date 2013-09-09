@@ -3,8 +3,8 @@ import
    ClaveRSA
    ClavePrivadaRSA
    ClavePublicaRSA
-   GestorNumeros
-   ComponenteMatematico
+   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
+   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
    %Browser
 export servicioGeneradorClaves:ServicioGeneradorClaves
 define 	 
