@@ -1,0 +1,98 @@
+functor
+import
+   QTk at 'x-oz://system/wp/QTk.ozf'
+   LibreriaCriptografica at 'file:../../LibreriaCriptografica/LibreriaCriptografica.ozf'
+   GeneradorClave at 'file:../../GeneradorClave/GeneradorClave.ozf'
+   GestorArchivos at 'file:../../GestorArchivo/GestorArchivo.ozf'
+   CodificadorRSA at 'file:../../CodificadorRSA/CodificadorRSA.ozf'
+   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
+define
+
+%Flujos y puertos para el alambrado de componentes
+   F1 P1 F1 F3 R3 Flujo FlujoAlmacenamiento PuertoCargaArchivo PuertoAlmacenamientoArchivo PuertoCodificacion FlujoCodificacion PuertoLibCodificacion FlujoLibCodificacion FlujoOpMatematicas PuertoOpMatematicas
+
+   proc {AlambrarComponentes} 
+      thread {GestorArchivos.cargarArchivo Flujo PuertoCargaArchivo} end
+      thread {GestorArchivos.almacenarArchivo FlujoAlmacenamiento PuertoAlmacenamientoArchivo} end
+      thread {GeneradorClave.generadorClave PuertoAlmacenamientoArchivo F1 P1} end
+      thread {LibreriaCriptografica.generarLlaves P1 F3 R3} end
+      thread {ComponenteMatematico.interfazMatematicaBasica FlujoOpMatematicas PuertoOpMatematicas} end
+      thread {CodificadorRSA.codificadorRSA PuertoOpMatematicas FlujoCodificacion PuertoCodificacion} end
+      thread {LibreriaCriptografica.codificar PuertoCodificacion FlujoLibCodificacion PuertoLibCodificacion} end
+   end
+
+   proc{AlmacenarTexto}
+      RutaArchivo={QTk.dialogbox save($)} Contenido
+   in  
+      if RutaArchivo \= nil then
+	 Contenido={TextHandle get($)}
+	 {Send PuertoAlmacenamientoArchivo almacenarArchivo(Contenido RutaArchivo)}
+      end
+   end  
+ 
+   proc{CargarArchivo} 
+      Contenido
+      RutaArchivo={QTk.dialogbox load(defaultextension:"txt" 
+				      initialdir:"." 
+				      title:"Cargar Archivo de texto..." 
+				      initialfile:"" 
+				      filetypes:q(q("Archivos de texto" q(".txt"))q("Llaves privadas" q(".rsak"))
+						 ) $)}
+   in  
+      if RutaArchivo \= nil then
+	 Contenido = {Send PuertoCargaArchivo cargarArchivo(RutaArchivo $) }    
+      % Ruta={String.toAtom Name}
+	 {TextHandle set( Contenido )}
+      %X={String.toAtom Contents}
+      end
+   end
+
+   proc{GenerarLlaves}
+      GenerarClaveRSA TipoLlaveAGenerar in
+      {Handle get(1:GenerarClaveRSA)}
+      if(GenerarClaveRSA) then TipoLlaveAGenerar= 'RSA' else TipoLlaveAGenerar = 'IDEA' end
+      {Send R3 generarLlave(TipoLlaveAGenerar)}
+      {TextHandle set("Clave Generada correctamente!")}
+
+   %{TextHandle set('N = ')}
+   end
+
+   proc{CodificarTexto}
+      GenerarClaveRSA TipoCodificacionAGenerar TextoDeco in
+      {Handle get(1:GenerarClaveRSA)}
+      if(GenerarClaveRSA) then TipoCodificacionAGenerar= 'RSA' else TipoCodificacionAGenerar = 'IDEA' end
+      TextoDeco = {Send PuertoLibCodificacion codificar(123 1234 $)}
+      {TextHandle set(TextoDeco)}
+
+   %{TextHandle set('N = ')}
+   end
+
+   Toolbar=lr(glue:we
+	      tbbutton(text:"Cargar" glue:w action:CargarArchivo)
+	      tbbutton(text:"Guardar" glue:w action:AlmacenarTexto)
+	      tbbutton(text:"Codificar" glue:w action:CodificarTexto)
+	      tbbutton(text:"Cerrar" glue:w action:toplevel#close))
+
+   TipoLlaves=td(radiobutton(text:'RSA' 
+			     init:true 
+			     group:radio1 handle:Handle )
+		 radiobutton(text:"IDEA"
+			     group:radio1) )
+ 
+   TextHandle EntryHandle Text Handle
+ 
+   Window={QTk.build td(Toolbar
+			text(glue:nswe handle:TextHandle bg:white tdscrollbar:true)
+			lr( entry(glue:w init:"Texto a encriptar"
+				  relief:solid
+				  handle:EntryHandle
+				  return:Text)
+			    tbbutton(text:"Generar Claves"
+				     glue:w  action:GenerarLlaves	)
+			    TipoLlaves)
+		       )}
+   
+   {AlambrarComponentes}                  
+   {Window show}
+end
+

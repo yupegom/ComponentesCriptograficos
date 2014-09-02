@@ -2,7 +2,7 @@ functor
 import
    String at 'x-oz://system/String.ozf'
    OS
-   ComponenteMatematico
+   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
    %Browser
 export generadorNumero:ServicioGeneradorNumero
 define

@@ -13,22 +13,15 @@ define
 	 skip
       end
 
-      % meth obtEst(?E)
-% 	 E = @t
-%       end
-       
       meth generarNumeroAleatorio(TamanoClave AleatorioAGenerar ?Aleatorio)
 	 Num
 	 T = {NewCell 0}
 	   
       in
-
 	 T := {String.length @AleatorioAGenerar}
 	 
 	 if ( @T  == TamanoClave ) then Aleatorio = @AleatorioAGenerar
-
 	 else
-	   
 	    {self generarAleatorioDentroDeRango(1111111111 10000000000 Num)}
 	    AleatorioAGenerar := { Append @AleatorioAGenerar { IntToString Num } }
 	    {self generarNumeroAleatorio(TamanoClave AleatorioAGenerar Aleatorio)}
@@ -37,20 +30,15 @@ define
 
       meth generarAleatorioDentroDeRango(Min Max ?Aleatorio)
 	 MaxRand = {OS.randLimits 0}
- 	 
       in
 	 Aleatorio = {Int.'div' ({OS.rand} * (Max - Min)) MaxRand} + Min
- 	
       end
 
       meth generarNumeroPrimo(Tamano ?Primo)
-
-	  
 	 EsPrimo = {NewCell true}
 	 Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
 	 PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
       in
-	 
 	 Aleatorio := {self generarNumeroAleatorio(Tamano AleatorioAGenerar $)}
 	 EsPrimo := {Send PuertoOpMatematicas realizarTestDeFermat({StringToInt @Aleatorio} $)}
 
@@ -61,8 +49,6 @@ define
  	 end
 	 	  
       end
-       
-
    end
   
 end

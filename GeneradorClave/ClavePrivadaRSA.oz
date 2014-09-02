@@ -4,34 +4,19 @@ export
    clavePrivadaRSA:ClavePrivadaRSA
 define
    class ClavePrivadaRSA
-      attr e n phiN
-      meth init
-	 skip
+      attr d n
+	 
+      meth init(D N)
+	 d := D
+	 n := N
       end
 
-      meth getE(?E)
-	 E = @e
-      end
-
-      meth setE(E)
-	 e := E
+      meth getD(?D)
+	 D = @d
       end
 
       meth getN(?N)
 	 N = @n
       end
-
-      meth setN(N)
-	 n := N
-      end
-
-      meth getPhiN(?PhiN)
-	 PhiN = @phiN
-      end
-
-      meth setPhiN(PhiN)
-	 phiN := PhiN
-      end
-
    end
 end

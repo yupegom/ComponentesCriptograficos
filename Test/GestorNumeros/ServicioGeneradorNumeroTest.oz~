@@ -10,3 +10,5 @@ proc{GenerarPrimoTest}
    end
    
 end
+
+{GenerarPrimoTest}

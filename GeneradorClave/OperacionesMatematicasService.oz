@@ -15,5 +15,21 @@ define
 	 PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $} in
 	 PrimosRelativos = {Send PuertoOpMatematicas verificarCoprimalidad(@P @Q $)}
       end
+
+
+       meth inversaMultiplicativa(Input ?Output)
+
+   PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $} in
+   Output = {Send PuertoOpMatematicas calcularInversaModular(Input 65537 $)}
+      end
+   
+
+   meth inversaAditiva(Input ?Output)
+
+   PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $} in
+   Output = {Send PuertoOpMatematicas inversaAditivaModular(Input $)}
+      end
+
+
    end
 end

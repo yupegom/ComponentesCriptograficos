@@ -1,0 +1,40 @@
+meth codificarBloques(TextoACodificar ClavePublica Operacion PuertoOpMatematicas ?TextoCodificado)
+      Potencia = {NewCell 0} Tamano=9 E={ClavePublica getE($)} N={ClavePublica getN($)} Bloque={NewCell ""} Mensaje = {NewCell ""} 
+
+         fun{CodificarBloque Texto Resultado}
+            {Browser.browse 'Entra a la funcion'}
+            %{Browser.browse {List.take Texto Tamano}}
+            Bloque := {List.take Texto Tamano}
+            %{Browser.browse 'Bloque'}
+            %{Browser.browse {StringToAtom @Bloque}}
+            if {List.length @Bloque} < Tamano then 
+               %{Browser.browse 'Ya terminó'}
+               %{Browser.browse {StringToInt {List.append @Bloque "0"}}}
+               Mensaje := {StringToInt {List.drop {List.append @Bloque "0"} 1} }
+            else if {List.nth @Bloque 1} == 48 then
+               %{Browser.browse 'Empieza con 0'}
+               %{Browser.browse {StringToInt {List.drop @Bloque 1}}}
+               Mensaje := {StringToInt {List.drop @Bloque 1}}
+            else
+               Mensaje := {StringToInt @Bloque}
+               %{Browser.browse 'No hay que hacerle nada'}
+               %{Browser.browse {StringToInt @Bloque}}
+               %{Browser.browse E}
+               %{Browser.browse {StringToAtom Texto}}
+               %{Browser.browse {StringToAtom {List.drop Texto Tamano}}}
+            end
+            end
+            Potencia := {Operacion PuertoOpMatematicas potencia(@Mensaje E $)}
+            if {List.length Texto} == 0 then
+               
+               %{IntToString {Operacion PuertoOpMatematicas modulo(@Potencia N $)}}
+               Resultado
+            else
+               {CodificarBloque {List.drop Texto Tamano} {Append Resultado {IntToString {Operacion PuertoOpMatematicas modulo(@Potencia N $)}}}}
+               %{Append {IntToString {Operacion PuertoOpMatematicas modulo(@Potencia N $)}} {CodificarBloque {List.drop Texto Tamano}}}
+            end
+           
+         end
+         
+          in TextoCodificado = {CodificarBloque TextoACodificar ""}
+      end

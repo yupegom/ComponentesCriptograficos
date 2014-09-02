@@ -1,57 +1,47 @@
-declare X R F1 R1 F2 R2 F3 R3 Flujo PuertoGestorArchivo
+declare X R F1 R1 F2 R2 F3 R3 Flujo FlujoAlmacenamiento PuertoCargaArchivo PuertoAlmacenamientoArchivo
 [QTk]={Module.link ["x-oz://system/wp/QTk.ozf"]}
 [LibreriaCriptografica]={Module.link ['../../LibreriaCriptografica/LibreriaCriptografica.ozf']}
 [GestorArchivos] = {Module.link[ '../../GestorArchivo/GestorArchivo.ozf' ]}
 {LibreriaCriptografica.generarLlaves F3 R3}
-{GestorArchivos.gestorArchivo Flujo PuertoGestorArchivo}
+{GestorArchivos.cargarArchivo Flujo PuertoCargaArchivo}
+{GestorArchivos.almacenarArchivo FlujoAlmacenamiento PuertoAlmacenamientoArchivo}
 
 proc{AlmacenarTexto}
    RutaArchivo={QTk.dialogbox save($)} Contenido
 in  
    if RutaArchivo \= nil then
       Contenido={TextHandle get($)}
-      {Send PuertoGestorArchivo almacenarArchivo(Contenido RutaArchivo)}
+      {Send PuertoAlmacenamientoArchivo almacenarArchivo(Contenido RutaArchivo)}
    end
 end  
  
 proc{CargarArchivo} 
    %Name={QTk.dialogbox load($)}
+   Contenido
    RutaArchivo={QTk.dialogbox load(defaultextension:"txt" 
-			      initialdir:"." 
-			      title:"Cargar Archivo de texto..." 
-			      initialfile:"" 
-			      filetypes:q(q("Archivos de texto" q(".txt"))
-					 ) $)}
+				   initialdir:"." 
+				   title:"Cargar Archivo de texto..." 
+				   initialfile:"" 
+				   filetypes:q(q("Archivos de texto" q(".txt"))
+					      ) $)}
 in  
    if RutaArchivo \= nil then
-      try
-	 ContenidoArchivo = {Send PuertoGestorArchivo cargarArchivo(RutaArchivo $) }     
-      in
-     % Ruta={String.toAtom Name}
-	 %Content = {Archivo getContenido($)}
-	 {TextHandle set( ContenidoArchivo )}
+      Contenido = {Send PuertoCargaArchivo cargarArchivo(RutaArchivo $) }     
+      % Ruta={String.toAtom Name}
+      {TextHandle set( Contenido )}
       %X={String.toAtom Contents}
-      %{Browse Archivo}
-      catch _ then {Browse 'Error'} end  
    end
 end
 
 proc{GenerarLlaves}
-   Clave ClavePrivadaRSA ClavePublicaRSA E N D in
-
-   Clave = {Send R3 generarLlave('RSA' $)}
-   ClavePrivadaRSA = {Clave getClavePrivada($)}
-   ClavePublicaRSA = {Clave getClavePublica($)}
-   E = {ClavePrivadaRSA getE($)}
-   %{Browse E}
-   N = {ClavePrivadaRSA getN($)}
-   D = {ClavePublicaRSA getD($)}
-   {TextHandle set(D)}
+   Clave ClavePrivadaRSA ClavePublicaRSA E N D GenerarClaveRSA TipoLlaveAGenerar in
+   {Handle get(1:GenerarClaveRSA)}
+   if(GenerarClaveRSA) then TipoLlaveAGenerar= 'RSA' else TipoLlaveAGenerar = 'IDEA' end
+   {Send R3 generarLlave(TipoLlaveAGenerar)}
+   {TextHandle set("Clave Generada correctamente!")}
 
    %{TextHandle set('N = ')}
 end
-
-   
 
 %proc {ReadEntry}
    
@@ -59,8 +49,14 @@ Toolbar=lr(glue:we
 	   tbbutton(text:"Cargar" glue:w action:CargarArchivo)
 	   tbbutton(text:"Guardar" glue:w action:AlmacenarTexto)
 	   tbbutton(text:"Cerrar" glue:w action:toplevel#close))
+
+TipoLlaves=td(radiobutton(text:'RSA' 
+		    init:true 
+		    group:radio1 handle:Handle )
+	radiobutton(text:"IDEA"
+		    group:radio1) )
  
-TextHandle EntryHandle Text
+TextHandle EntryHandle Text Handle
  
 Window={QTk.build td(Toolbar
 		     text(glue:nswe handle:TextHandle bg:white tdscrollbar:true)
@@ -69,7 +65,8 @@ Window={QTk.build td(Toolbar
 			       handle:EntryHandle
 			       return:Text)
 			 tbbutton(text:"Generar Claves"
-				  glue:w  action:GenerarLlaves	))
+				  glue:w  action:GenerarLlaves	)
+		     TipoLlaves)
 		    )}
                     
 {Window show}

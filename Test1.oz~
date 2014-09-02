@@ -1,0 +1,100 @@
+declare A='a' L="bola" X
+D = {NewDictionary}
+
+{Dictionary.put D 'a' 1}
+{Dictionary.put D 'b' 2}
+{Dictionary.put D 'c' 3}
+%{Browse {Dictionary.get D 'b'}}
+
+% declare
+% fun {Lists L1 L2}
+%    case L1 of H1|T1 then
+%       %{Browse {Dictionary.get D H1}}
+%       {Lists T1 {Append L2 H1}}
+%    end
+%    case L1 of H1|nil then
+%       {Append H1 L2}
+%       L2
+%    end
+   
+% end
+
+%X={Lists "hola" "df"}
+%{Browse X }
+
+
+%{Browse {String.toInt {Map "hola" fun {$ X} X end} }}
+% {Browse {Map "hola" fun {$ X} X end}}
+% Z = {Map "hola" fun {$ X} {Int.toString X} end}
+% {Browse {String.isInt Z}}
+      
+%{D.put A 1}
+%{Browse {D.get a}}
+
+declare
+% turns [1,2,3] into 321
+fun {Unlistify L}
+   case
+      L of nil then {Browse ""} ""
+   [] H|T then {Browse H} {Append {Int.toString H} {Unlistify T}}%{List.append H {Unlistify T}}%H + 10 * {Unlistify T}
+   end
+end
+
+fun {Unlistify2 L}
+   case
+      L of nil then 0
+   [] H|T then H + 10 * {Unlistify T}
+   end
+end
+
+%{Browse {String.toInt {Unlistify "hola"}}}
+%{Browse {String.toAtom {Int.toString 104}} }
+%{Browse {Append {Int.toString 1} {Int.toString 2}}}
+
+{Browse {String.toInt {Unlistify "INDEX VERSION 1.126+C:\Users\Fernando\Documents\SURA\workspace\.metadata\.plugins\org.eclipse.jdt.core
+210527295.index
+682069341.index
+3626931047.index
+1075156909.index
+683184654.index
+1065299771.index
+3015671029.index
+2706502329.index
+1085479826.index
+2729541923.index
+909887623.index
+3628729419.index
+3002231661.index
+3354286038.index
+3040545741.index
+87645303.index
+3105826164.index
+2986475337.index
+3062315777.index
+7469979.index
+739078005.index
+208985158.index
+506415668.index
+180130654.index
+1252674545.index
+101867582.index
+2944752687.index
+1493633844.index
+4004564456.index
+3317179.index
+728132027.index
+4188372073.index
+1042962577.index
+3935747316.index
+412203577.index
+1820024274.index
+1375832433.index
+4154574215.index
+2350734403.index
+46375389.index
+3757573425.index
+4227954670.index
+3450974350.index
+714895588.index
+2485081894.index"
+}}}

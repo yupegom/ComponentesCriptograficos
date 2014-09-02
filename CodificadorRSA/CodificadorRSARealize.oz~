@@ -1,0 +1,17 @@
+functor
+export codificador:CodificadorRSA
+define 	 
+   class CodificadorRSA
+
+      meth init
+	 skip
+      end
+      
+      meth codificar(Texto Llave PuertoOpMatematicas ?TextoCodificado)
+	 Potencia in
+	 Potencia = {Send PuertoOpMatematicas potencia(123 17 $)}
+	 TextoCodificado = {Send PuertoOpMatematicas modulo(Potencia 3233 $)}
+      end
+   end
+  
+end

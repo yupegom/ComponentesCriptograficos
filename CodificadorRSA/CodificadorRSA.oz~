@@ -1,0 +1,30 @@
+functor
+import
+   Componente at 'file:../../AbstraccionComponente/Componente.ozf'
+   Browser
+   CodificadorRSARealize
+export
+   codificadorRSA:ICodificadorRSA
+define
+   proc {ICodificadorRSA PuertoOpMatematicas Flujo PuertoCodificador}
+      {Componente.nuevoPuertoReq
+       proc{$Mensaje} CodificadorRSA = {New CodificadorRSARealize.codificador init}
+       in
+	  case Mensaje of codificar(TextoACodificar Llave ?TextoCodificado) then
+	     try
+		{Browser.browse "Llego al codifcador"}
+		TextoCodificado = {CodificadorRSA codificar(TextoACodificar Llave PuertoOpMatematicas $)}
+		{Browser.browse TextoCodificado}
+	     catch X then  {Browser.browse 'ExcepciÃ³n al Generar ' #X# ' No se pudo crear la clave solicitada.' }
+	     end
+	  
+	  [] _ then {Browser.browse "No encontró la operación"}
+	    
+	  end
+       end Flujo PuertoCodificador}
+   end
+   
+  %  proc {RealizarOperacion Puerto Msg}
+%       {Componente.proveerServ Puerto Msg}
+%    end
+end

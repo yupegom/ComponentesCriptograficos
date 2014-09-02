@@ -2,48 +2,39 @@ functor
 import
    Componente at 'file:../../AbstraccionComponente/Componente.ozf'
    Browser
-   GestorArchivo at 'file:../../GestorArchivo/GestorArchivo.ozf'
-   GeneradorClave at 'file:../../GeneradorClave/GeneradorClave.ozf'
+   %GeneradorClave at 'file:../../GeneradorClave/GeneradorClave.ozf'
 export
-   cargarArchivo:ICargarArchivo
-   almacenarArchivo:IAlmacenarArchivo
    generarLlaves:IGenerarLlaves
-define  R1 R2
-   proc {ICargarArchivo Flujo PuertoCarga}
-     
+   codificar:ICodificar
+define
+   proc {IGenerarLlaves R2 Flujo3 PuertoGeneracionLlaves}
+
       {Componente.nuevoPuertoReq
        proc{$Msg}
+	  case Msg of codificar(Texto Llave ?TextCodificado) then
 	     try
-		{GestorArchivo.gestorArchivo Flujo R1}
-		{Send R1 Msg}
-		
-	     catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pudo abrir el archivo deseado.' } end
-
-       end Flujo PuertoCarga}
-   end
-
-   proc {IAlmacenarArchivo Flujo2 PuertoAlmacenamiento}
-
-      {Componente.nuevoPuertoReq
-       proc{$Msg}
-	  try
-	     {GestorArchivo.gestorArchivo Flujo2 R2}
-	     {Send R2 Msg}
-	  catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pudo almacenar el archivo deseado.' } end
-
-       end Flujo2 PuertoAlmacenamiento}
-   end
-
-   proc {IGenerarLlaves Flujo3 PuertoGeneracionLlaves}
-
-      {Componente.nuevoPuertoReq
-       proc{$Msg}
-	  try
-	     {GeneradorClave.generadorClave Flujo3 R2}
-	     {Send R2 Msg}
-	  catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pueden generar las llaves.' } end
+		{LlamarServicio R2 Msg}
+	     catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pueden generar las llaves.' } end
+	  [] _ then skip
+	  end
 
        end Flujo3 PuertoGeneracionLlaves}
+   end
+
+   proc {ICodificar PuertoCodificacion Flujo PuertoLibCodificacion}
+
+      {Componente.nuevoPuertoReq
+       proc{$Msg}
+	  try
+	     {Browser.browse Msg}
+	     {LlamarServicio PuertoCodificacion Msg}
+	  catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pueden generar las llaves.' } end
+
+       end Flujo PuertoLibCodificacion}
+   end
+
+   proc {LlamarServicio Puerto Msg}
+      {Componente.proveerServ Puerto Msg}
    end
    
 end

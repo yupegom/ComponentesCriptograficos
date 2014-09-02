@@ -11,7 +11,7 @@ define
 	 skip
       end
       
-      meth almacenarArchivo(RutaArchivo Contenido)
+      meth almacenarArchivo(Contenido RutaArchivo)
 	 try
 	    File={New Open.file init(name:RutaArchivo flags:[write create truncate])} in
 	    {File write(vs:Contenido)}

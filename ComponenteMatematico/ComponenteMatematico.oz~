@@ -1,6 +1,6 @@
 functor
 import
-   Componente at 'file:../AbstraccionComponente/Componente.ozf'
+   Componente at 'file:../../AbstraccionComponente/Componente.ozf'
    Browser
    FuncionesAvanzadas
 export

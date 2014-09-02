@@ -1,0 +1,3 @@
+declare
+P = fun {$ X} {System.show X } X + N end
+{Browse {List.map {BitString.toList @IBS} P}}

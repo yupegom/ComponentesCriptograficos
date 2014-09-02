@@ -40,7 +40,7 @@ define
 	 EsPrimo = {NewCell true}
 	 PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
       in
- 	 for I in 1..K break:B do
+	 for I in 1..K break:B do
 	   
 	    Aleatorio := {Send PuertoGenNumero generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
 	    MCD := {self calcularFuncionDeEuclides(@Aleatorio Valor $)}
@@ -63,18 +63,32 @@ define
 	
       end
 
-      meth sumaModulo(Sumando1 Sumando2 ?Resultado)
-	 ?Resultado = Sumando1 + Sumando2
-      end
+      meth sumaModulo(Sumando1 Sumando2 ?Sum)
+      
+      fun{Loop Res}
+      	if Res >= 65536 then
+      	   
+		   {Loop {Int.'mod' Res 65536}}
+		else Res
+		end	
+      end in
 
-      meth productoModulo(Factor1 Factor2 ?Res)
-	 Resultado={NewCell 0} in
-	
-	 Resultado := Factor1 * Factor2
-	 if @Resultado > 65537 then
-	    Res = {Int.'mod' @Resultado 65537}
-	 else Res = @Resultado	    
-	 end
+	 Sum = {Loop Sumando1+Sumando2}
+     end
+
+     meth inversaAditivaModular(Sumando ?Sum)
+     	Sum = 65536 - Sumando
+     end
+
+      meth productoModulo(Factor1 Factor2 ?Prod)
+	 
+	 fun{Loop Res}
+      	if Res >= 65537 then
+      	   {Loop {Int.'mod' Res 65537}}
+		else Res
+		end	
+     end in
+	 Prod = {Loop Factor1*Factor2}
       end
 
       meth calcularInversaModular(Valor1 Valor2 ?InversaModular)
@@ -103,11 +117,11 @@ define
 	 
       end
 
-       meth generarNumeroPrimo(Tamano ?Primo)
+      meth generarNumeroPrimo(Tamano ?Primo)
   
 	 EsPrimo = {NewCell true}
-	  Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
-	  PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
+	 Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
+	 PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
 	 
       in
 	 
@@ -115,13 +129,39 @@ define
 	 EsPrimo := {self realizarTestDeFermat({StringToInt @Aleatorio} $)}
 
 	 if @EsPrimo == true then
- 	    Primo = {StringToInt @Aleatorio}
+	    Primo = {StringToInt @Aleatorio}
 	 else
- 	    Primo = {self generarNumeroPrimo(Tamano $)}
- 	 end
+	    Primo = {self generarNumeroPrimo(Tamano $)}
+	 end
 	 	  
       end
-             
+
+      meth modulo(Operador1 Operador2 ?Modulo)
+	 Modulo = Operador1 mod Operador2
+      end
+
+      meth potencia(Operador Potencia ?Resultado)
+	 Resultado = {Pow Operador Potencia}
+      end
+
+      meth exponenciacionModular(Base Potencia Modulo ?Resultado)
+	 	Resultado = {ExponenciacionModulo Base Potencia Modulo}
+      end
+
+      %Convierte un string binario a decimal
+      meth toInt(Binario Length ?Int)
+      	Int = {BitStringToInt Length Binario}
+      end
+
+      meth inversaMultiplicativa(Input ?Inversa)
+      	%{Euclide Valor1 Valor2 Inv _}
+      	%Inversa = Inv
+      	Inversa = 1 div Input
+      end
+
+      meth inversaAditiva(Input ?Inversa)
+      	Inversa = Input * ~1
+      end
    end
 
 
@@ -135,6 +175,17 @@ define
 	 end
       end
    in {Loop E} @A end
+
+   fun {ExponenciacionModulo B E M} % exponenciación módular
+	   A={NewCell 1} CB={NewCell (B mod M)} 
+	   proc {Loop E}
+	      if E>0 then
+		 if (E mod 2)==1 then A:=(@A * @CB) mod M end
+		 CB:=(@CB * @CB) mod M
+		 {Loop (E div 2)}
+	      end
+	   end
+	in {Loop E} @A end  
    
    proc {Euclide A B ?X ?Y} % Algoritmo extendido de euclides
       if B==0 then X=1 Y=0 else
@@ -142,6 +193,30 @@ define
 	 in X=Y1 Y=X1-Y1*(A div B) end
       end
    end
+
+   %Auxiliar para convertir un binario a decimal
+	fun {BL2I Bin}
+	      P = fun {$ X Y} Y + {Number.pow 2 X} end
+	      in
+	      {List.foldR Bin P 0}
+	end
+
+	%Convierte un string un decimal
+	fun {BitStringToInt Length Bin}
+	   IndexOfBin = {ToList {List.reverse Bin} 0} in
+	   {BL2I {BitString.toList {BitString.make Length IndexOfBin}}}
+	end
+
+	%Auxiliar para obtener los índices en los que un string de bits tiene un valor = 1 (Ascii = 49)
+	fun{ToList List Indice}
+	   
+	   case List of H|T then
+	      if H == 49 then  Indice | {ToList T Indice+1}
+	      else {ToList T Indice+1}
+	      end
+	   [] nil then nil
+	   end
+	end
 
 end
 

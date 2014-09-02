@@ -6,6 +6,7 @@ ozc -c GeneradorClave/Clave.oz -o GeneradorClave/Clave.ozf
 ozc -c GeneradorClave/ClaveRSA.oz -o GeneradorClave/ClaveRSA.ozf
 ozc -c GeneradorClave/ClavePrivadaRSA.oz -o GeneradorClave/ClavePrivadaRSA.ozf
 ozc -c GeneradorClave/ClavePublicaRSA.oz -o GeneradorClave/ClavePublicaRSA.ozf
+ozc -c GeneradorClave/ClaveIDEA.oz -o GeneradorClave/ClaveIDEA.ozf
 ozc -c GeneradorClave/ServicioGeneradorClaves.oz -o GeneradorClave/ServicioGeneradorClaves.ozf
 ozc -c GeneradorClave/GeneradorClave.oz -o GeneradorClave/GeneradorClave.ozf
 ozc -c GeneradorClave/OperacionesMatematicasService.oz -o GeneradorClave/OperacionesMatematicasService.ozf
@@ -14,4 +15,17 @@ ozc -c GestorArchivo/GestorArchivo.oz -o GestorArchivo/GestorArchivo.ozf
 ozc -c GestorArchivo/Archivo.oz -o GestorArchivo/Archivo.ozf
 ozc -c GestorArchivo/CargarArchivo.oz -o GestorArchivo/CargarArchivo.ozf
 ozc -c GestorArchivo/AlmacenarArchivo.oz -o GestorArchivo/AlmacenarArchivo.ozf
+ozc -c BitOperations/IntWithBitSupport.oz -o BitOperations/IntWithBitSupport.ozf
+ozc -c CodificadorRSA/ClaveRSA.oz -o CodificadorRSA/ClaveRSA.ozf
+ozc -c CodificadorRSA/ClavePrivadaRSA.oz -o CodificadorRSA/ClavePrivadaRSA.ozf
+ozc -c CodificadorRSA/ClavePublicaRSA.oz -o CodificadorRSA/ClavePublicaRSA.ozf
+ozc -c CodificadorRSA/CodificadorRSA.oz -o CodificadorRSA/CodificadorRSA.ozf
+ozc -c CodificadorIDEA/Clave.oz -o CodificadorIDEA/Clave.ozf
+ozc -c CodificadorIDEA/ClaveIDEA.oz -o CodificadorIDEA/ClaveIDEA.ozf
+ozc -c CodificadorIDEA/CodificadorIDEA.oz -o CodificadorIDEA/CodificadorIDEA.ozf
+ozc -c CodificadorIDEA/ProcesadorTexto.oz -o CodificadorIDEA/ProcesadorTexto.ozf
+ozc -c CodificadorRSA/ProcesadorTexto.oz -o CodificadorRSA/ProcesadorTexto.ozf
+ozc -c CodificadorRSA/CodificadorRSARealize.oz -o CodificadorRSA/CodificadorRSARealize.ozf
+ozc -c CodificadorIDEA/IDEA.oz -o CodificadorIDEA/IDEA.ozf
 ozc -c LibreriaCriptografica/LibreriaCriptografica.oz -o LibreriaCriptografica/LibreriaCriptografica.ozf
+ozc -x Interfaz/Gui/GUI.oz -o Interfaz/Gui/GUI.exe

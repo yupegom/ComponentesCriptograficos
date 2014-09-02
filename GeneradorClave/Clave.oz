@@ -1,6 +1,6 @@
 functor
-import
-   Browser
+%import
+ %  Browser
 export
    clave:Clave
 define

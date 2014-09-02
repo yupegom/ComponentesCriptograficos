@@ -14,10 +14,11 @@ Servicio = {New MatAvanzada.matematicaAvanzada init}
 % {Browse SonPrimos}
 % {Browse PotenciaModulo}
 
-% %Prueba del test de fermat%
-%  IsP 
-%  IsP = {Servicio realizarTestDeFermat(99720930713792136711893398807118793972539787163499815266954748696299302139079 $)}
-%  {Browse IsP}
+ %Prueba del test de fermat%
+  IsP 
+ % IsP = {Servicio realizarTestDeFermat(99720930713792136711893398807118793972539787163499815266954748696299302139079 $)}
+  IsP = {Servicio realizarTestDeFermat(1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 $)}
+  {Browse IsP}
 
 % Producto = {NewCell 0}
 % Producto := {Servicio productoModulo(2 2 $)}
@@ -35,5 +36,7 @@ proc{GenerarPrimoTest}
    end
    
 end
+declare X = {Servicio potencia(123 17 $)} Y = {Servicio modulo(X 3233 $)}
+{Browse Y}
 
-{GenerarPrimoTest}
+%{GenerarPrimoTest}

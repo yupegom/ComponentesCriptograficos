@@ -1,9 +1,8 @@
 functor
 import
-   Open
-   Browser
+   Archivo
 export
-  gestorArchivo:AlmacenarArchivo
+   gestorArchivo:AlmacenarArchivo
 define
    class AlmacenarArchivo
 
@@ -12,12 +11,9 @@ define
       end
       
       meth almacenarArchivo(Contenido RutaArchivo)
-	 try
-	    File={New Open.file init(name:RutaArchivo flags:[write create truncate])} in
-	    {File write(vs:Contenido)}
-	    
-	    {File close}
-	 catch X then {Browser.browse 'Excepción: ' #X# ' No se pudo almacenar el archivo deseado.' } end
+	 ArchivoAAlmacenar = {New Archivo.archivo init(RutaArchivo Contenido 'txt')}
+      in
+	 {ArchivoAAlmacenar almacenar}
       end
       
    end

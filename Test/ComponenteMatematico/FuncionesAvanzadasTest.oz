@@ -10,9 +10,9 @@ Servicio = {New MatAvanzada.matematicaAvanzada init}
 % Mcd = {Servicio calcularFuncionDeEuclides(99720930713792136711893398807118793972539787163499815266954748696299302139079 96642143513025090447720156774474626259144348429505860962661123942802193326421 $)}
 
 % SonPrimos = {Servicio verificarCoprimalidad(99720930713792136711893398807118793972539787163499815266954748696299302139079 96642143513025090447720156774474626259144348429505860962661123942802193326421 $)}
-% PotenciaModulo = {Servicio calcularPotenciaModulo(15 61 $)}
+PotenciaModulo = {Servicio calcularPotenciaModulo(15 61 $)}
 % {Browse SonPrimos}
-% {Browse PotenciaModulo}
+ {Browse PotenciaModulo}
 
  %Prueba del test de fermat%
   IsP 
@@ -36,5 +36,7 @@ proc{GenerarPrimoTest}
    end
    
 end
+declare X = {Servicio potencia(123 17 $)} Y = {Servicio modulo(X 3233 $)}
+{Browse Y}
 
 %{GenerarPrimoTest}

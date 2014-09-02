@@ -12,7 +12,7 @@ define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init}
       {Componente.nuevoPuertoReq
        proc{$Mensaje}
 	  try
-	     {Browser.browse 'Mock Component'}
+	     {Servicio Mensaje}
 	  catch X then {Browser.browse 'Error '#X#' No se logró realizar la operación.'} end
 
        end Flujo PuertoOpBasicas}
