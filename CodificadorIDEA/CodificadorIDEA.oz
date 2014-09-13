@@ -3,29 +3,31 @@ import
    Componente at 'file:../../AbstraccionComponente/Componente.ozf'
    Browser
    IDEA
-   ClaveIDEA
+   ClaveCodificacionIDEA
+   ClaveDecodificacionIDEA
 export
    codificadorIDEA:ICodificadorIDEA
+   generacionClave: ServicioRequGeneradorClave
+   opMatematicas: ServicioRequOpMatematicas
 define
-	PuertoClaves
-    proc {ICodificadorIDEA PuertoOpMatematicas PuertoGeneradorClaves Flujo PuertoCodificador}
+	PuertoClaves PuertoOpMatematicas
+    proc {ICodificadorIDEA PuertoOperacionesMatematicas PuertoGeneradorClaves Flujo PuertoCodificador}
+      PuertoClaves = PuertoGeneradorClaves
+      PuertoOpMatematicas = PuertoOperacionesMatematicas
       {Componente.nuevoPuertoReq
-       proc{$Mensaje} CodificadorIDEA = {New IDEA.codificador init(PuertoOpMatematicas ServicioExterno)} Clave Subclaves
-       PuertoClaves = PuertoGeneradorClaves
+       proc{$Mensaje} CodificadorIDEA = {New IDEA.codificador init} Clave
        in
 	  case Mensaje of codificar(TextoACodificar IdeaKey ?TextoCodificado) then
 	     try
-			Subclaves = {ServicioExterno generarSubclavesParaCodificacion({StringToInt IdeaKey} $)}
-			Clave = {New ClaveIDEA.claveIDEA init(Subclaves)}
-			TextoCodificado = {CodificadorIDEA codificar(TextoACodificar Clave $)}
+	     	Clave = {New ClaveCodificacionIDEA.claveCodificacionIDEA init(IdeaKey)}
+			TextoCodificado = {{CodificadorIDEA codificar(TextoACodificar Clave $)} texto($)}
 		 catch X then  {Browser.browse 'Excepción al Codificar con IDEA' #X# ' No se logró realizar la codificación.' }
 	     end
 
 	  [] decodificar(TextoADecodificar IdeaKey ?TextoDecodificado) then
 	     try
-			Subclaves = {ServicioExterno generarSubclavesParaDecodificacion({StringToInt IdeaKey} $)}
-			Clave = {New ClaveIDEA.claveIDEA init(Subclaves)}
-			TextoDecodificado = {CodificadorIDEA decodificar(TextoADecodificar Clave $)}
+			Clave = {New ClaveDecodificacionIDEA.claveDecodificacionIDEA init(IdeaKey)}
+			TextoDecodificado = {{CodificadorIDEA decodificar(TextoADecodificar Clave $)} texto($)}
 		 catch X then  {Browser.browse 'Excepción al Decodificar con IDEA ' #X# ' No se logró realizar la decodificación.' }
 	     end
 	  
@@ -35,7 +37,11 @@ define
        end Flujo PuertoCodificador}
     end
    
-	proc {ServicioExterno Msg}
+	proc {ServicioRequGeneradorClave Msg}
 	   {Componente.proveerServ PuertoClaves Msg}
+	end
+	
+	proc {ServicioRequOpMatematicas Msg}
+	   {Componente.proveerServ PuertoOpMatematicas Msg}
 	end
 end

@@ -119,7 +119,7 @@ define
 
    %Obtiene a partir de un valor decimal, las subclaves para IDEA
 	fun {GenKeys Value}
-	   D={Dictionary.new} Key in
+	   D={Dictionary.new} in
 	      {GetKeys Value D}
 	   
 	end
@@ -128,7 +128,7 @@ define
 	fun{GetKeys Value D}
 	    
 	    proc{Loop TextBlock}
-	    	Temp Key = {List.length {D.keys}} in
+	    	Key = {List.length {D.keys}} in
 		    if Key =< 51 then
 			   if {List.length  TextBlock} > 0 then
 			   	  {D.put Key {BitStringToInt {List.reverse {List.take TextBlock 16}}}}

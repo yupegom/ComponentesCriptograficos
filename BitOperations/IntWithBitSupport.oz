@@ -93,11 +93,11 @@ define
       {I2BS I ""}
    end
       
-   fun {BinaryStringToInt Bin}
-      P = fun {$ I X Y} Y + (X - 48) * {Number.pow 2 (I - 1)} end
-     in
-      {List.foldRInd {List.reverse Bin} P 0}
-   end
+   %fun {BinaryStringToInt Bin}
+   %   P = fun {$ I X Y} Y + (X - 48) * {Number.pow 2 (I - 1)} end
+   %  in
+   %   {List.foldRInd {List.reverse Bin} P 0}
+   %end
    
 
    

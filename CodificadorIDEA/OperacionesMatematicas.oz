@@ -1,25 +1,29 @@
 functor
-
+import
+   CodificadorIDEA
 export
-   clavePublicaRSA:ClavePublicaRSA
+   opMatService:OperacionesMatematicas
 define
-   class ClavePublicaRSA
-      puerto
+   class OperacionesMatematicas
 	 
-      meth init(PuertoOperacionesMatematicas)
-      	puerto := PuertoOperacionesMatematicas
+      meth init
+         skip
       end
 
-      meth productoModulo(Multiplicando Multiplicador ?E)
-         {Servicio @puerto productoModulo(Multiplicando Multiplicador)}
+      meth productoModulo(Multiplicando Multiplicador ?Producto)
+         Producto = {CodificadorIDEA.opMatematicas productoModulo(Multiplicando Multiplicador $)}
       end
 
-      meth sumaModulo(?N)
-         N = @n
+      meth sumaModulo(Operador1 Operador2 ?Suma)
+         Suma = {CodificadorIDEA.opMatematicas sumaModulo(Operador1 Operador2 $)}
       end
 
-      meth xor(?N)
-         N = @n
+      meth xor(Operador1 Operador2 ?Resultado)
+         Resultado = {CodificadorIDEA.opMatematicas xor(Operador1 Operador2 $)}
+      end
+
+      meth toInt(Binario Length ?Int)
+         Int = {CodificadorIDEA.opMatematicas toInt(Binario Length $)}
       end
 
    end

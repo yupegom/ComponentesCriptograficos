@@ -5,14 +5,14 @@ export
    claveIDEA:ClaveIDEA
 define
    class ClaveIDEA from Clave.clave
-      attr subclaves
-      meth init(Subclaves)
-	     subclaves := Subclaves
-	   end
+      attr clave subclaves: nil
 
-      meth getSubclaves(?Subclaves)
-	     Subclaves = @subclaves
+      meth init(Clave)
+        clave := Clave
       end
 
+      meth getClave(?Clave)
+        Clave = @clave
+      end
    end
 end
