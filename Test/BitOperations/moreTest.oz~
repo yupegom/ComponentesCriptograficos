@@ -1,9 +1,0 @@
-declare
-fun {BL2I Bin}
-      P = fun {$ X Y} {Browse X} {Browse Y} Y + {Number.pow 2 X} end
-      in
-      {List.foldR Bin P 0}
-end
-
-{Browse {BL2I 01 }}
-%{Browse {List.map "00010" IsInt}}
