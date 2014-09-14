@@ -8,6 +8,7 @@ import
    ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
    Application(exit)
    %Browser
+
 define
 
 %Flujos y puertos para el alambrado de componentes
@@ -23,12 +24,58 @@ define
       
    end
 
+   class GUI
+
+      meth init
+         {AlambrarComponentes}
+      end
+
+      meth almacenarArchivo(Contenido Ruta)
+         {Send PuertoAlmacenamientoArchivo almacenarArchivo(Contenido Ruta)}
+      end
+
+      meth generarLlave(TipoLlaveAGenerar)
+         {Send PuertoGeneradorClaves generarLlave(TipoLlaveAGenerar)}
+      end
+
+      meth cargarArchivo(RutaArchivo ?Contenido)
+         {Send PuertoCargaArchivo cargarArchivo(RutaArchivo Contenido) } 
+      end
+
+      meth codificar(TipoCodificacion RutaClave TextoACodificar ?TextoCodificado)
+         Clave E N Zs in
+         Clave = {self cargarArchivo(RutaClave $) }
+         if TipoCodificacion == 'RSA' then
+            {List.takeDropWhile Clave IsEnter N Zs}
+            {List.subtract Zs 10 E}
+            {Send PuertoCodificacionRSA codificar(TextoACodificar {String.toInt N} {String.toInt E} ({List.length N}-1) TextoCodificado)}
+         else
+            {Send PuertoCodificacionIDEA codificar(TextoACodificar Clave TextoCodificado)}
+         end
+      end
+
+      meth decodificar(TipoDecodificacion RutaClave TextoADecodificar ?TextoDecodificado)
+         Clave N D Zs in
+         Clave = {self cargarArchivo(RutaClave $) }
+         if TipoDecodificacion == 'RSA' then
+            {List.takeDropWhile Clave IsEnter N Zs}
+            {List.subtract Zs 10 D}
+            {Send PuertoCodificacionRSA decodificar(TextoADecodificar {String.toInt N} {String.toInt D} ({List.length N}) TextoDecodificado)}
+         else
+            {Send PuertoCodificacionIDEA decodificar(TextoADecodificar Clave TextoDecodificado)}
+         end
+      end
+   end
+
+
+   local InterfaceController = {New GUI init} TextHandle Handle in
+
    proc{AlmacenarTexto}
       RutaArchivo={QTk.dialogbox save($)} Contenido
    in  
       if RutaArchivo \= nil then
-	 Contenido={TextHandle get($)}
-	 {Send PuertoAlmacenamientoArchivo almacenarArchivo(Contenido RutaArchivo)}
+   	 Contenido={TextHandle get($)}
+   	 {InterfaceController almacenarArchivo(Contenido RutaArchivo)}
       end
    end  
  
@@ -37,10 +84,8 @@ define
       RutaArchivo={RutaArchivoACargar ".txt" "Archivo de texto" "txt"}
    in  
       if RutaArchivo \= nil then
-	 Contenido = {Send PuertoCargaArchivo cargarArchivo(RutaArchivo $) }    
-      % Ruta={String.toAtom Name}
-	 {TextHandle set( Contenido )}
-      %X={String.toAtom Contents}
+         Contenido = {InterfaceController cargarArchivo(RutaArchivo $)}  
+	     {TextHandle set( Contenido )}
       end
    end
 
@@ -48,10 +93,8 @@ define
       GenerarClaveRSA TipoLlaveAGenerar in
       {Handle get(1:GenerarClaveRSA)}
       if(GenerarClaveRSA) then TipoLlaveAGenerar= 'RSA' else TipoLlaveAGenerar = 'IDEA' end
-      {Send PuertoGeneradorClaves generarLlave(TipoLlaveAGenerar)}
+         {InterfaceController generarLlave(TipoLlaveAGenerar)}
       {TextHandle set("Clave Generada correctamente!")}
-
-   %{TextHandle set('N = ')}
    end
 
    fun {IsEnter A}
@@ -59,64 +102,42 @@ define
    end
 
    proc{CodificarTexto}
-      GenerarClaveRSA TipoCodificacionAGenerar ResultadoCodificacion ClavePublica E N TextoACodificar
-      RutaClavePublica RutaClaveIDEA ClaveIDEA Zs
+      GenerarClaveRSA TipoCodificacionAGenerar ResultadoCodificacion TextoACodificar
+      RutaClave
       in
       {Handle get(1:GenerarClaveRSA)}
       if(GenerarClaveRSA) then 
-         RutaClavePublica = {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"}
-         TipoCodificacionAGenerar= 'RSA' 
-         if RutaClavePublica \= nil then
-            ClavePublica = {Send PuertoCargaArchivo cargarArchivo(RutaClavePublica $) }
-            {List.takeDropWhile ClavePublica IsEnter N Zs}
-            {List.subtract Zs 10 E}
-            TextoACodificar = {TextHandle get($)}
-            ResultadoCodificacion = {Send PuertoCodificacionRSA codificar(TextoACodificar {String.toInt N} {String.toInt E} ({List.length N}-1) $)}
-            {TextHandle set(ResultadoCodificacion)}
-         end
+         RutaClave = {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"}
+         TipoCodificacionAGenerar = 'RSA'
       else 
          TipoCodificacionAGenerar = 'IDEA'
-         RutaClaveIDEA = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
-         if RutaClaveIDEA \= nil then
-            ClaveIDEA = {Send PuertoCargaArchivo cargarArchivo(RutaClaveIDEA $) }
-            TextoACodificar = {TextHandle get($)}
-            ResultadoCodificacion = {Send PuertoCodificacionIDEA codificar(TextoACodificar ClaveIDEA $)}
-            {TextHandle set(ResultadoCodificacion)}
-         end
+         RutaClave = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
+         
       end
-  
+      if RutaClave \= nil then
+         TextoACodificar = {TextHandle get($)}
+         ResultadoCodificacion = {InterfaceController codificar(TipoCodificacionAGenerar RutaClave TextoACodificar $)}
+         {TextHandle set(ResultadoCodificacion)}  
+      end
    end
 
    proc{DecodificarTexto}
-      GenerarClaveRSA TipoDecodificacionAGenerar ResultadoDecodificacion ClavePrivada D N TextoADecodificar
-      RutaClavePrivada RutaClaveIDEA ClaveIDEA Zs
+      GenerarClaveRSA TipoDecodificacionAGenerar ResultadoDecodificacion TextoADecodificar
+      RutaClave
       in
-      
       {Handle get(1:GenerarClaveRSA)}
       if(GenerarClaveRSA) then 
-         RutaClavePrivada =  {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"} 
+         RutaClave =  {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"} 
          TipoDecodificacionAGenerar= 'RSA'
-         if RutaClavePrivada \= nil then
-            ClavePrivada = {Send PuertoCargaArchivo cargarArchivo(RutaClavePrivada $) }
-            {List.takeDropWhile ClavePrivada IsEnter N Zs}
-            {List.subtract Zs 10 D}
-            TextoADecodificar = {TextHandle get($)}
-            ResultadoDecodificacion = {Send PuertoCodificacionRSA decodificar(TextoADecodificar {String.toInt N} {String.toInt D } {List.length N} $)}
-            {TextHandle set(ResultadoDecodificacion)}
-         end
-      else 
-         TipoDecodificacionAGenerar = 'IDEA' 
-         RutaClaveIDEA = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
-         if RutaClaveIDEA \= nil then
-            ClaveIDEA = {Send PuertoCargaArchivo cargarArchivo(RutaClaveIDEA $) }
-            TextoADecodificar = {TextHandle get($)}
-            ResultadoDecodificacion = {Send PuertoCodificacionIDEA decodificar(TextoADecodificar ClaveIDEA $)}
-            {TextHandle set(ResultadoDecodificacion)}
-         end
+      else
+         TipoDecodificacionAGenerar = 'IDEA'
+         RutaClave = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
       end
-      
-
-      %{TextHandle set('N = ')}
+      if RutaClave \= nil then
+         TextoADecodificar = {TextHandle get($)}
+         ResultadoDecodificacion = {InterfaceController decodificar(TipoDecodificacionAGenerar RutaClave TextoADecodificar $)}
+         {TextHandle set(ResultadoDecodificacion)}  
+      end
    end
 
    proc{RutaArchivoACargar Tipo Desc DefaultExtension ?RutaArchivo} 
@@ -147,7 +168,7 @@ define
 		 radiobutton(text:"IDEA"
 			     group:radio1) )
  
-   TextHandle EntryHandle Handle
+   
  
    Window={QTk.build td(Toolbar
 			text(glue:nswe handle:TextHandle bg:white tdscrollbar:true)
@@ -157,7 +178,8 @@ define
 			    TipoLlaves)
 		       )}
    
-   {AlambrarComponentes}                  
+   %{AlambrarComponentes}                  
    {Window show}
+   end
 end
 
