@@ -7,74 +7,59 @@ export
 define
    class FuncionesAvanzadas
        
-      meth init
-	 skip
-      end
-
-     %  meth getInstance(?Instance)
-% 	 lock L then
-% 	    if{Not{IsDet Instance}} then
-% 	       Instance = {New FuncionesAvanzadas init}
-	    
-% 	    end
-% 	 end
-%       end
+    meth init
+		skip
+    end
       
-      meth calcularFuncionDeEuclides(Valor1 Valor2 ?Mcd)
+    meth calcularFuncionDeEuclides(Valor1 Valor2 ?Mcd)
 	
-	 Residuo = {NewCell 0} in
-	 Residuo := {Int.'mod' Valor1 Valor2}
+		Residuo = {NewCell 0} in
+	 	Residuo := {Int.'mod' Valor1 Valor2}
 
-	 if @Residuo  == 0 then Mcd = Valor2
+	 	if @Residuo  == 0 then Mcd = Valor2
     	 
-	 else
-	    {self calcularFuncionDeEuclides(Valor2 @Residuo Mcd)}
-	 end
+		else
+	    	{self calcularFuncionDeEuclides(Valor2 @Residuo Mcd)}
+		end
 	
-      end
+    end
 
-      meth realizarTestDeFermat(Valor ?EsProbablePrimo)
+    meth realizarTestDeFermat(Valor ?EsProbablePrimo)
 
-	 RangoInferior = 1 RangoSuperior = Valor - 1
-	 Aleatorio={NewCell 0} K = 40 MCD = {NewCell 0} Res = {NewCell 0}
-	 EsPrimo = {NewCell true}
-	 PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
-      in
-	 for I in 1..K break:B do
+		RangoInferior = 1 RangoSuperior = Valor - 1
+		Aleatorio={NewCell 0} K = 40 MCD = {NewCell 0} Res = {NewCell 0}
+		EsPrimo = {NewCell true}
+	 	PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
+    in
+		for I in 1..K break:B do
 	   
-	    Aleatorio := {Send PuertoGenNumero generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
-	    MCD := {self calcularFuncionDeEuclides(@Aleatorio Valor $)}
+	    	Aleatorio := {Send PuertoGenNumero generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
+	    	MCD := {self calcularFuncionDeEuclides(@Aleatorio Valor $)}
 
-	    if @MCD \= 1 then
-	       EsPrimo := false
-	       {B}
-	    end
+	    	if @MCD \= 1 then
+	    		EsPrimo := false
+	    		{B}
+	    	end
 
-	    Res := {self calcularPotenciaModulo(@Aleatorio Valor $)}
-	    if @Res \= 1 then
-	       EsPrimo := false
-	       {B}
-	    end
-	    
-	    %{Browser.browse @Aleatorio}
-	 end
-	 EsProbablePrimo = @EsPrimo
-	 
-	
-      end
+	    	Res := {self calcularPotenciaModulo(@Aleatorio Valor $)}
+	    	if @Res \= 1 then
+	       		EsPrimo := false
+	       		{B}
+	    	end
+	 	end
+		EsProbablePrimo = @EsPrimo
+    end
 
-      meth sumaModulo(Sumando1 Sumando2 ?Sum)
+    meth sumaModulo(Sumando1 Sumando2 ?Sum)
       
-      fun{Loop Res}
-      	if Res >= 65536 then
-      	   
-		   {Loop {Int.'mod' Res 65536}}
-		else Res
-		end	
-      end in
-
-	 Sum = {Loop Sumando1+Sumando2}
-     end
+    	fun{Loop Res}
+      		if Res >= 65536 then
+				{Loop {Int.'mod' Res 65536}}
+			else Res
+			end	
+		end in
+		Sum = {Loop Sumando1+Sumando2}
+    end
 
      meth inversaAditivaModular(Sumando ?Sum)
      	Sum = 65536 - Sumando
