@@ -24,6 +24,43 @@ define
 	
     end
 
+    meth calcularInversaModular(Valor1 Valor2 ?InversaModular)
+		Inversa  in
+		{Euclide Valor1 Valor2 Inversa _}
+		if {Int.isNat Inversa} then
+		   InversaModular = Inversa
+		else
+		   InversaModular = Inversa + Valor2
+		end
+	 
+    end
+
+   	meth productoModulo(Factor1 Factor2 ?Prod)
+	 
+		fun{Loop Res}
+	      	if Res >= 65537 then
+	      	   {Loop {Int.'mod' Res 65537}}
+			else Res
+			end	
+     	end in
+	 	Prod = {Loop Factor1*Factor2}
+    end
+
+    meth exponenciacionModular(Base Potencia Modulo ?Resultado)
+		Resultado = {ExponenciacionModulo Base Potencia Modulo}
+    end
+
+    meth sumaModulo(Sumando1 Sumando2 ?Sum)
+      
+    	fun{Loop Res}
+      		if Res >= 65536 then
+				{Loop {Int.'mod' Res 65536}}
+			else Res
+			end	
+		end in
+		Sum = {Loop Sumando1+Sumando2}
+    end
+
     meth realizarTestDeFermat(Valor ?EsProbablePrimo)
 
 		RangoInferior = 1 RangoSuperior = Valor - 1
@@ -41,7 +78,7 @@ define
 	    		{B}
 	    	end
 
-	    	Res := {self calcularPotenciaModulo(@Aleatorio Valor $)}
+	    	Res := {self CalcularPotenciaModulo(@Aleatorio Valor $)}
 	    	if @Res \= 1 then
 	       		EsPrimo := false
 	       		{B}
@@ -50,103 +87,55 @@ define
 		EsProbablePrimo = @EsPrimo
     end
 
-    meth sumaModulo(Sumando1 Sumando2 ?Sum)
-      
-    	fun{Loop Res}
-      		if Res >= 65536 then
-				{Loop {Int.'mod' Res 65536}}
-			else Res
-			end	
-		end in
-		Sum = {Loop Sumando1+Sumando2}
+    meth verificarCoprimalidad(Valor1 Valor2 ?EsPrimoRelativo)
+		Mcd in
+	 	Mcd = {self calcularFuncionDeEuclides(Valor1 Valor2 $)}
+		if Mcd == 1 then
+		   EsPrimoRelativo = true
+		else
+		   EsPrimoRelativo = false
+		end
+	 
     end
 
-     meth inversaAditivaModular(Sumando ?Sum)
-     	Sum = 65536 - Sumando
-     end
-
-      meth productoModulo(Factor1 Factor2 ?Prod)
-	 
-	 fun{Loop Res}
-      	if Res >= 65537 then
-      	   {Loop {Int.'mod' Res 65537}}
-		else Res
-		end	
-     end in
-	 Prod = {Loop Factor1*Factor2}
-      end
-
-      meth calcularInversaModular(Valor1 Valor2 ?InversaModular)
-	 Inversa  in
-	 {Euclide Valor1 Valor2 Inversa _}
-	 if {Int.isNat Inversa} then
-	    InversaModular = Inversa
-	 else
-	    InversaModular = Inversa + Valor2
-	 end
-	 
-      end
-      
-      meth calcularPotenciaModulo(A N ?Resultado)
-	 Resultado = {ModExp A N}
-      end
-
-      meth verificarCoprimalidad(Valor1 Valor2 ?EsPrimoRelativo)
-	 Mcd in
-	 Mcd = {self calcularFuncionDeEuclides(Valor1 Valor2 $)}
-	 if Mcd == 1 then
-	    EsPrimoRelativo = true
-	 else
-	    EsPrimoRelativo = false
-	 end
-	 
-      end
-
-      meth generarNumeroPrimo(Tamano ?Primo)
+    meth generarNumeroPrimo(Tamano ?Primo)
   
-	 EsPrimo = {NewCell true}
-	 Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
-	 PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
-	 
-      in
-	 
-	 Aleatorio := {Send PuertoGenNumero generarNumero(Tamano AleatorioAGenerar $)}
-	 EsPrimo := {self realizarTestDeFermat({StringToInt @Aleatorio} $)}
+		EsPrimo = {NewCell true} Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
+		PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
+	    in
+		 
+		Aleatorio := {Send PuertoGenNumero generarNumero(Tamano AleatorioAGenerar $)}
+		EsPrimo := {self realizarTestDeFermat({StringToInt @Aleatorio} $)}
 
-	 if @EsPrimo == true then
-	    Primo = {StringToInt @Aleatorio}
-	 else
-	    Primo = {self generarNumeroPrimo(Tamano $)}
-	 end
-	 	  
-      end
+		if @EsPrimo == true then
+		   Primo = {StringToInt @Aleatorio}
+		else
+		   Primo = {self generarNumeroPrimo(Tamano $)}
+		end
+    end
 
-      meth modulo(Operador1 Operador2 ?Modulo)
-	 Modulo = Operador1 mod Operador2
-      end
+    meth inversaAditivaModular(Sumando ?Sum)
+     	Sum = 65536 - Sumando
+    end
+    
+    %Convierte un string binario a decimal
+    meth toInt(Binario Length ?Int)
+     	Int = {BitStringToInt Length Binario}
+    end
 
-      meth potencia(Operador Potencia ?Resultado)
-	 Resultado = {Pow Operador Potencia}
-      end
+    meth modulo(Operador1 Operador2 ?Modulo)
+		Modulo = Operador1 mod Operador2
+    end
 
-      meth exponenciacionModular(Base Potencia Modulo ?Resultado)
-	 	Resultado = {ExponenciacionModulo Base Potencia Modulo}
-      end
+    meth CalcularPotenciaModulo(Valor1 Valor2 ?Resultado)
+		Resultado = {ModExp Valor1 Valor2}
+    end
 
-      %Convierte un string binario a decimal
-      meth toInt(Binario Length ?Int)
-      	Int = {BitStringToInt Length Binario}
-      end
+    %No se está usando?
+    meth potencia(Operador Potencia ?Resultado)
+		Resultado = {Pow Operador Potencia}
+    end
 
-      meth inversaMultiplicativa(Input ?Inversa)
-      	%{Euclide Valor1 Valor2 Inv _}
-      	%Inversa = Inv
-      	Inversa = 1 div Input
-      end
-
-      meth inversaAditiva(Input ?Inversa)
-      	Inversa = Input * ~1
-      end
    end
 
 
