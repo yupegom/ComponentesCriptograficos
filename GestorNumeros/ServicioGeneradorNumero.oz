@@ -2,7 +2,8 @@ functor
 import
    String at 'x-oz://system/String.ozf'
    OS
-   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
+   %Browser
+   GestorNumeros
 export generadorNumero:ServicioGeneradorNumero
 define
    
@@ -35,10 +36,9 @@ define
 
 	    meth generarNumeroPrimo(Tamano ?Primo)
 			EsPrimo = {NewCell true} Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
-		 	PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
 	    	in
 			Aleatorio := {self generarNumeroAleatorio(Tamano AleatorioAGenerar $)}
-		 	EsPrimo := {Send PuertoOpMatematicas realizarTestDeFermat({StringToInt @Aleatorio} $)}
+		 	EsPrimo := {GestorNumeros.operacionesMatematicas realizarTestDeFermat({StringToInt @Aleatorio} $)}
 
 			if @EsPrimo == true then
 		 	   Primo = {StringToInt @Aleatorio}
@@ -47,7 +47,7 @@ define
 		 	end
 		 	  
 	    end
-	end
+	 end
   
 end
 

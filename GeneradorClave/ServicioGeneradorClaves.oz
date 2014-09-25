@@ -5,123 +5,107 @@ import
    ClavePrivadaRSA
    ClavePublicaRSA
    ClaveIDEA
-   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
-   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
    OperacionesMatematicasService
    GeneradorNumerosService
    IntBitSupport at 'file:../../BitOperations/IntWithBitSupport.ozf'
    Browser
+   GeneradorClave
 export servicioGeneradorClaves:ServicioGeneradorClaves
 define 	 
-   class ServicioGeneradorClaves
+    class ServicioGeneradorClaves
+    	attr operacionesService generadorNumsService
+      	
+      	meth init
+	 		operacionesService := {New OperacionesMatematicasService.servicioOperacionesMatematicas init}
+	 		generadorNumsService := {New GeneradorNumerosService.servicioGeneradorNumeros init}
+      	end
 
-      attr operacionesService generadorNumsService
-      meth init
-	 operacionesService := {New OperacionesMatematicasService.servicioOperacionesMatematicas init}
-	 generadorNumsService := {New GeneradorNumerosService.servicioGeneradorNumeros init}
-      end
+    	meth generarClave(TipoClaveAGenerar ?Clave)
+	 		if TipoClaveAGenerar == 'RSA' then
+	    	Clave = {self GenerarClavesRSA($)}
+	 		else
+	    	Clave = {self GenerarClaveIDEA($)}
+	 		end
+      	end
 
-      meth generarClave(TipoClaveAGenerar ?Clave)
-	 if TipoClaveAGenerar == 'RSA' then
-	    Clave = {self GenerarClavesRSA($)}
-	 else
-	    Clave = {self GenerarClaveIDEA($)}
-	 end
-      end
+	    %Al finalizar Subclaves es un map que contiene cada una de las 51 claves
+	    meth generarSubclavesParaCodificacion(Clave ?Subclaves)
+	    IntWhitBitSupport in
+	    	IntWhitBitSupport = {New IntBitSupport.intBitSupport init(128 Clave)}
+	    	Subclaves = {GenKeys IntWhitBitSupport}
+	    end
 
-
-    %Al finalizar Subclaves es un map que contiene cada una de las 51 claves
-    meth generarSubclavesParaCodificacion(Clave ?Subclaves)
-    IntWhitBitSupport in
-    	IntWhitBitSupport = {New IntBitSupport.intBitSupport init(128 Clave)}
-    	Subclaves = {GenKeys IntWhitBitSupport}
-    end
-
-    meth generarSubclavesParaDecodificacion(Clave ?SubclavesDec)
-    Subclaves in
-    	Subclaves = {self generarSubclavesParaCodificacion(Clave $)}
-    	SubclavesDec = {GenDecodificacionKeys Subclaves @operacionesService}
-    end
+	    meth generarSubclavesParaDecodificacion(Clave ?SubclavesDec)
+	    Subclaves in
+	    	Subclaves = {self generarSubclavesParaCodificacion(Clave $)}
+	    	SubclavesDec = {GenDecodificacionKeys Subclaves @operacionesService}
+	    end
 
       %Métodos privados
  
-      meth GenerarClavesRSA(?LlaveRSA)
-	 N E PhiN P = {NewCell 0} Q = {NewCell 0} PrimosRelativos = {NewCell false} D LlavePrivadaRSA LlavePublicaRSA
-	 proc{Loop PrimosRelativos}
-	    if @PrimosRelativos == false then
-	       P := {self ObtenerPrimo($)}
-	       Q := {self ObtenerPrimo($)}
-	       PrimosRelativos := {@operacionesService verificarCoprimalidad(P Q $)}
-	       {Loop PrimosRelativos}
-	    end
+    meth GenerarClavesRSA(?LlaveRSA)
+		N E PhiN P = {NewCell 0} Q = {NewCell 0} PrimosRelativos = {NewCell false} D LlavePrivadaRSA LlavePublicaRSA
+		proc{Loop PrimosRelativos}
+		    if @PrimosRelativos == false then
+		       P := {self ObtenerPrimo($)}
+		       Q := {self ObtenerPrimo($)}
+		       PrimosRelativos := {@operacionesService verificarCoprimalidad(P Q $)}
+		       {Loop PrimosRelativos}
+		    end
+		end
 	 
-	 end
-	 
-      in
-	 {Loop PrimosRelativos} 
-	 N = @P * @Q
-	 PhiN = {self ObtenerValorDePhi(@P @Q $)}
-	 E = {self ObtenerValorDeE(PhiN $)}
-	 D = {self ObtenerValorDeD(E PhiN $)}
-	 LlavePrivadaRSA = {New ClavePrivadaRSA.clavePrivadaRSA init(D N)}
-	 LlavePublicaRSA = {New ClavePublicaRSA.clavePublicaRSA init(E N)}
-	 LlaveRSA = {New ClaveRSA.claveRSA init(LlavePrivadaRSA LlavePublicaRSA)}
-      end
+    	in
+		 {Loop PrimosRelativos} 
+		 N = @P * @Q
+		 PhiN = {self ObtenerValorDePhi(@P @Q $)}
+		 E = {self ObtenerValorDeE(PhiN $)}
+		 D = {self ObtenerValorDeD(E PhiN $)}
+		 LlavePrivadaRSA = {New ClavePrivadaRSA.clavePrivadaRSA init(D N)}
+		 LlavePublicaRSA = {New ClavePublicaRSA.clavePublicaRSA init(E N)}
+		 LlaveRSA = {New ClaveRSA.claveRSA init(LlavePrivadaRSA LlavePublicaRSA)}
+    end
       
-      meth ObtenerPrimo(?Primo)
-	 Primo = {@generadorNumsService generarNumeroPrimo(50 $)}
-      end
+    meth ObtenerPrimo(?Primo)
+		Primo = {@generadorNumsService generarNumeroPrimo(50 $)}
+    end
 		
 	meth GenerarClaveIDEA(?LlaveIDEA)
 		AleatorioClave
 	 	in
 	 	AleatorioClave = {@generadorNumsService generarAleatorioDentroDeRango(10000000000000000000000000000000000000 100000000000000000000000000000000000000 $)}
 	 	LlaveIDEA = {New ClaveIDEA.claveIDEA init( AleatorioClave )}
-
 	end
 
-     meth ObtenerValorDeE(PhiN ?E)
+    meth ObtenerValorDeE(PhiN ?E)
+		PrimosRelativos	Eaux = {NewCell 0}
+		in
+		Eaux := {GeneradorClave.generadorNumeros generarAleatorioDentroDeRangoEspecifico(1 PhiN $)}
+		PrimosRelativos = {@operacionesService verificarCoprimalidad(@Eaux PhiN $)}
+		if PrimosRelativos == true then
+		   E = @Eaux
+		else
+	 	   %{Browser.browse 'No son primos relativos'}
+		   {self ObtenerValorDeE(PhiN E)}
+		end 
+    end
 
-	 PrimosRelativos
-	 Eaux = {NewCell 0}
-	 PuertoGeneradorNumeros = {GestorNumeros.gestorNumero _ $}
-	 PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
-      in
+    meth ObtenerValorDePhi(P Q ?PhiN)
+		PhiN = (P - 1) * (Q - 1)  
+	end
 
-	 Eaux := {Send PuertoGeneradorNumeros generarAleatorioDentroDeRangoEspecifico(1 PhiN $)}
-	 PrimosRelativos = {Send PuertoOpMatematicas verificarCoprimalidad(@Eaux PhiN $)}
-	 if PrimosRelativos == true then
-	    E = @Eaux
-	 else
- 	    %{Browser.browse 'No son primos relativos'}
-	    {self ObtenerValorDeE(PhiN E)}
-	 end
-	 	 
-      end
-
-      meth ObtenerValorDePhi(P Q ?PhiN)
-
-	 PhiN = (P - 1) * (Q - 1) 
-	 
-      end
-
-      meth ObtenerValorDeD(E PhiN ?D)
-	 PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
-      in
-	 
-	 D = {Send PuertoOpMatematicas calcularInversaModular(E PhiN $)}
-      end
+    meth ObtenerValorDeD(E PhiN ?D)
+		D = {@operacionesService calcularInversaModular(E PhiN $)}
+    end
       
              
    end
 
    %Funciones auxiliares para obtener las subclaves para la codificación con IDEA
 
-   %Obtiene a partir de un valor decimal, las subclaves para IDEA
-	fun {GenKeys Value}
-	   D={Dictionary.new} in
-	      {GetKeys Value D}
-	   
+    %Obtiene a partir de un valor decimal, las subclaves para IDEA
+    fun {GenKeys Value}
+	   	D={Dictionary.new} in
+	   	{GetKeys Value D}
 	end
 
 	%Agrupa las claves en valores de 16 bits

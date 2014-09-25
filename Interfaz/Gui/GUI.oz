@@ -6,6 +6,7 @@ import
    CodificadorRSA at 'file:../../CodificadorRSA/CodificadorRSA.ozf'
    CodificadorIDEA at 'file:../../CodificadorIDEA/CodificadorIDEA.ozf'
    ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
+   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
    Application(exit)
    %Browser
 
@@ -13,12 +14,14 @@ define
 
 %Flujos y puertos para el alambrado de componentes
    FlujoGeneradorClaves PuertoGeneradorClaves Flujo FlujoAlmacenamiento PuertoCargaArchivo PuertoAlmacenamientoArchivo PuertoCodificacionRSA PuertoCodificacionIDEA FlujoCodificacion FlujoCodificacionIDEA FlujoOpMatematicas PuertoOpMatematicas
+   FlujoNumeros PuertoGeneradorNumeros
 
    proc {AlambrarComponentes} 
       thread {GestorArchivos.cargarArchivo Flujo PuertoCargaArchivo} end
       thread {GestorArchivos.almacenarArchivo FlujoAlmacenamiento PuertoAlmacenamientoArchivo} end
-      thread {GeneradorClave.generadorClave PuertoAlmacenamientoArchivo FlujoGeneradorClaves PuertoGeneradorClaves} end
-      thread {ComponenteMatematico.interfazMatematicaBasica FlujoOpMatematicas PuertoOpMatematicas} end
+      thread {ComponenteMatematico.interfazMatematicaAvanzada PuertoGeneradorNumeros FlujoOpMatematicas PuertoOpMatematicas} end
+      thread {GestorNumeros.gestorNumero PuertoOpMatematicas FlujoNumeros PuertoGeneradorNumeros} end
+      thread {GeneradorClave.generadorClave PuertoOpMatematicas PuertoGeneradorNumeros PuertoAlmacenamientoArchivo FlujoGeneradorClaves PuertoGeneradorClaves} end
       thread {CodificadorRSA.codificadorRSA PuertoOpMatematicas FlujoCodificacion PuertoCodificacionRSA} end
       thread {CodificadorIDEA.codificadorIDEA PuertoOpMatematicas PuertoGeneradorClaves FlujoCodificacionIDEA PuertoCodificacionIDEA} end
       
@@ -50,7 +53,7 @@ define
             {List.subtract Zs 10 E}
             {Send PuertoCodificacionRSA codificar(TextoACodificar {String.toInt N} {String.toInt E} ({List.length N}-1) TextoCodificado)}
          else
-            {Send PuertoCodificacionIDEA codificar(TextoACodificar Clave TextoCodificado)}
+            {Send PuertoCodificacionIDEA codificar(TextoACodificar Clave ?TextoCodificado)}
          end
       end
 

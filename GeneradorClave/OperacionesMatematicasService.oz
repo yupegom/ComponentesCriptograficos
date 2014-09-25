@@ -1,7 +1,6 @@
 functor
 import
-   %GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
-   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
+   GeneradorClave
 export servicioOperacionesMatematicas:OperacionesMatematicasService
 define 	 
    class OperacionesMatematicasService
@@ -11,23 +10,21 @@ define
       end
 
       meth verificarCoprimalidad(P Q ?PrimosRelativos)
-
-	 PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $} in
-	 PrimosRelativos = {Send PuertoOpMatematicas verificarCoprimalidad(@P @Q $)}
+	       PrimosRelativos = {GeneradorClave.realizarOperacion verificarCoprimalidad(@P @Q $)}
       end
 
 
-       meth inversaMultiplicativa(Input ?Output)
+      meth inversaMultiplicativa(Input ?Output)
+        Output = {GeneradorClave.realizarOperacion calcularInversaModular(Input 65537 $)}
+      end
 
-   PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $} in
-   Output = {Send PuertoOpMatematicas calcularInversaModular(Input 65537 $)}
+      meth calcularInversaModular(Input Input2 ?Output)
+        Output = {GeneradorClave.realizarOperacion calcularInversaModular(Input Input2 $)}
       end
    
 
-   meth inversaAditiva(Input ?Output)
-
-   PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $} in
-   Output = {Send PuertoOpMatematicas inversaAditivaModular(Input $)}
+      meth inversaAditiva(Input ?Output)
+        Output = {GeneradorClave.realizarOperacion inversaAditivaModular(Input $)}
       end
 
 

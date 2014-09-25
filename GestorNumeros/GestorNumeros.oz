@@ -5,9 +5,11 @@ import
    Browser
 export
    gestorNumero:IGestorNumero
-define Servicio = {New ServicioGeneradorNumero.generadorNumero init}
+   operacionesMatematicas: ServicioOpMatematicas
+define Servicio = {New ServicioGeneradorNumero.generadorNumero init} PuertoMatematico
 
-   proc {IGestorNumero FlujoNumero PuertoGeneradorNumero}
+   proc {IGestorNumero PuertoOperacioinesMatematicas FlujoNumero PuertoGeneradorNumero}
+   		PuertoMatematico = PuertoOperacioinesMatematicas
       {Componente.nuevoPuertoReq
        proc{$Mensaje}
 	  case Mensaje of generarNumero(Tamano AleatorioAGenerar Aleatorio) then
@@ -41,4 +43,8 @@ define Servicio = {New ServicioGeneradorNumero.generadorNumero init}
 	  end
        end FlujoNumero PuertoGeneradorNumero}
    end
+
+  	proc {ServicioOpMatematicas Msg}
+       {Componente.proveerServ PuertoMatematico Msg}
+ 	end
 end

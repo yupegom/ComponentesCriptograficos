@@ -1,4 +1,4 @@
-functor
+  functor
 import
    Componente at 'file:../../AbstraccionComponente/Componente.ozf'
    Browser
@@ -6,7 +6,8 @@ import
 export
    interfazMatematicaAvanzada:IMatematicaAvanzada
    interfazMatematicaBasica:IMatematicaBasica
-define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init}
+   generacionNumeros: ServicioRequGeneracionNumeros
+define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init} PuertoGenNumeros
    proc {IMatematicaBasica Flujo PuertoOpBasicas}
 
       {Componente.nuevoPuertoReq
@@ -18,8 +19,8 @@ define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init}
        end Flujo PuertoOpBasicas}
    end
 
-   proc {IMatematicaAvanzada Flujo2 PuertoOpAvanzadas}
-
+   proc {IMatematicaAvanzada PuertoGeneradorNumeros Flujo2 PuertoOpAvanzadas}
+      PuertoGenNumeros = PuertoGeneradorNumeros
       {Componente.nuevoPuertoReq
        proc{$Mensaje}
 	  
@@ -31,4 +32,8 @@ define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init}
 
        end Flujo2 PuertoOpAvanzadas}
    end
+
+  proc {ServicioRequGeneracionNumeros Msg}
+       {Componente.proveerServ PuertoGenNumeros Msg}
+  end
 end
