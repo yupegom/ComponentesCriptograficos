@@ -13,15 +13,14 @@ import
 define
 
 %Flujos y puertos para el alambrado de componentes
-   FlujoGeneradorClaves PuertoGeneradorClaves Flujo FlujoAlmacenamiento PuertoCargaArchivo PuertoAlmacenamientoArchivo PuertoCodificacionRSA PuertoCodificacionIDEA FlujoCodificacion FlujoCodificacionIDEA FlujoOpMatematicas PuertoOpMatematicas
+   FlujoGeneradorClaves PuertoGeneradorClaves Flujo PuertoOperacionesArchivo PuertoCodificacionRSA PuertoCodificacionIDEA FlujoCodificacion FlujoCodificacionIDEA FlujoOpMatematicas PuertoOpMatematicas
    FlujoNumeros PuertoGeneradorNumeros
 
    proc {AlambrarComponentes} 
-      thread {GestorArchivos.cargarArchivo Flujo PuertoCargaArchivo} end
-      thread {GestorArchivos.almacenarArchivo FlujoAlmacenamiento PuertoAlmacenamientoArchivo} end
+      thread {GestorArchivos.operacionesArchivo Flujo PuertoOperacionesArchivo} end
       thread {ComponenteMatematico.interfazMatematicaAvanzada PuertoGeneradorNumeros FlujoOpMatematicas PuertoOpMatematicas} end
       thread {GestorNumeros.gestorNumero PuertoOpMatematicas FlujoNumeros PuertoGeneradorNumeros} end
-      thread {GeneradorClave.generadorClave PuertoOpMatematicas PuertoGeneradorNumeros PuertoAlmacenamientoArchivo FlujoGeneradorClaves PuertoGeneradorClaves} end
+      thread {GeneradorClave.generadorClave PuertoOpMatematicas PuertoGeneradorNumeros PuertoOperacionesArchivo FlujoGeneradorClaves PuertoGeneradorClaves} end
       thread {CodificadorRSA.codificadorRSA PuertoOpMatematicas FlujoCodificacion PuertoCodificacionRSA} end
       thread {CodificadorIDEA.codificadorIDEA PuertoOpMatematicas PuertoGeneradorClaves FlujoCodificacionIDEA PuertoCodificacionIDEA} end
       
@@ -34,7 +33,7 @@ define
       end
 
       meth almacenarArchivo(Contenido Ruta)
-         {Send PuertoAlmacenamientoArchivo almacenarArchivo(Contenido Ruta)}
+         {Send PuertoOperacionesArchivo almacenarArchivo(Contenido Ruta)}
       end
 
       meth generarLlave(TipoLlaveAGenerar)
@@ -42,7 +41,7 @@ define
       end
 
       meth cargarArchivo(RutaArchivo ?Contenido)
-         {Send PuertoCargaArchivo cargarArchivo(RutaArchivo Contenido) } 
+         {Send PuertoOperacionesArchivo cargarArchivo(RutaArchivo Contenido) } 
       end
 
       meth codificar(TipoCodificacion RutaClave TextoACodificar ?TextoCodificado)
@@ -71,7 +70,8 @@ define
    end
 
 
-   local InterfaceController = {New GUI init} TextHandle Handle in
+   local InterfaceController = {New GUI init} 
+   TextHandle Handle in
 
    proc{AlmacenarTexto}
       RutaArchivo={QTk.dialogbox save($)} Contenido

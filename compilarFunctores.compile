@@ -15,8 +15,8 @@ ozc -c GeneradorClave/OperacionesMatematicasService.oz -o GeneradorClave/Operaci
 ozc -c GeneradorClave/GeneradorNumerosService.oz -o GeneradorClave/GeneradorNumerosService.ozf
 ozc -c GestorArchivo/GestorArchivo.oz -o GestorArchivo/GestorArchivo.ozf
 ozc -c GestorArchivo/Archivo.oz -o GestorArchivo/Archivo.ozf
-ozc -c GestorArchivo/CargarArchivo.oz -o GestorArchivo/CargarArchivo.ozf
-ozc -c GestorArchivo/AlmacenarArchivo.oz -o GestorArchivo/AlmacenarArchivo.ozf
+ozc -c GestorArchivo/ServicioCargaArchivo.oz -o GestorArchivo/ServicioCargaArchivo.ozf
+ozc -c GestorArchivo/ServicioAlmacenamientoArchivo.oz -o GestorArchivo/ServicioAlmacenamientoArchivo.ozf
 ozc -c BitOperations/IntWithBitSupport.oz -o BitOperations/IntWithBitSupport.ozf
 ozc -c CodificadorRSA/ClaveRSA.oz -o CodificadorRSA/ClaveRSA.ozf
 ozc -c CodificadorRSA/ClavePrivadaRSA.oz -o CodificadorRSA/ClavePrivadaRSA.ozf
