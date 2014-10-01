@@ -10,12 +10,11 @@ define
 	proc {IGestorArchivo Flujo PuertoCarga}
 	   	{Componente.nuevoPuertoReq
 	      proc{$Mensaje}
-		  	ServicioCarga ServicioAlmacenamiento ArchivoCargado in
-			case Mensaje of cargarArchivo(RutaArchivo ?Contenido) then
+		  	ServicioCarga ServicioAlmacenamiento in
+			case Mensaje of cargarArchivo(RutaArchivo ?Archivo) then
 				ServicioCarga = {New  ServicioOperacionesArchivo.gestorArchivo init} 
 			    try
-					ArchivoCargado = {ServicioCarga cargarArchivo(RutaArchivo $)}
-					Contenido = {ArchivoCargado contenido($)}
+					Archivo = {ServicioCarga cargarArchivo(RutaArchivo $)}
 			    catch X then  {Browser.browse 'Excepción al Cargar ' #X# ' No se pudo abrir el archivo deseado.' }
 			    end
 			[] almacenarArchivo(Contenido RutaArchivo) then

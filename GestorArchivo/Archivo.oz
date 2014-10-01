@@ -1,6 +1,5 @@
 functor
 import
-   Browser
    Open
 export
    archivo:Archivo
@@ -31,7 +30,7 @@ define
             File={New Open.file init(name:{self nombreArchivo($)} flags:[write create truncate])} in
             {File write(vs:{self contenido($)})} 
             {File close}
-            catch X then {Browser.browse 'Excepción: ' #X# ' No se pudo almacenar el archivo deseado.' }
+            catch X then raise X end
          end
       end
       

@@ -41,7 +41,9 @@ define
       end
 
       meth cargarArchivo(RutaArchivo ?Contenido)
-         {Send PuertoOperacionesArchivo cargarArchivo(RutaArchivo Contenido) } 
+         Archivo in
+         Archivo = {Send PuertoOperacionesArchivo cargarArchivo(RutaArchivo $) } 
+         {Archivo contenido($)}
       end
 
       meth codificar(TipoCodificacion RutaClave TextoACodificar ?TextoCodificado)
@@ -73,7 +75,7 @@ define
    local InterfaceController = {New GUI init} 
    TextHandle Handle in
 
-   proc{AlmacenarTexto}
+   proc{AlmacenarArchivo}
       RutaArchivo={QTk.dialogbox save($)} Contenido
    in  
       if RutaArchivo \= nil then
@@ -88,7 +90,7 @@ define
    in  
       if RutaArchivo \= nil then
          Contenido = {InterfaceController cargarArchivo(RutaArchivo $)}  
-	     {TextHandle set( Contenido )}
+	     {TextHandle set( {Archivo contenido($)} )}
       end
    end
 
@@ -160,7 +162,7 @@ define
 
    Toolbar=lr(glue:we
 	      tbbutton(text:"Cargar" glue:w action:CargarArchivo)
-	      tbbutton(text:"Guardar" glue:w action:AlmacenarTexto)
+	      tbbutton(text:"Guardar" glue:w action:AlmacenarArchivo)
 	      tbbutton(text:"Codificar" glue:w action:CodificarTexto)
          tbbutton(text:"Decodificar" glue:w action:DecodificarTexto)
 	      tbbutton(text:"Cerrar" glue:w action:CerrarAplicacion))

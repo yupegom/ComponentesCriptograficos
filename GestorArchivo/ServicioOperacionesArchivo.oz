@@ -2,7 +2,6 @@ functor
 import
    Open
    Archivo
-   Browser
 export
    gestorArchivo:ServicioOperacionesArchivo
 define
@@ -16,7 +15,7 @@ define
    meth almacenarArchivo(Contenido RutaArchivo)
       ArchivoAAlmacenar = {New Archivo.archivo init(RutaArchivo Contenido 'txt')}
    in
-	  {ArchivoAAlmacenar almacenar}
+     {ArchivoAAlmacenar almacenar}
    end
 
    meth cargarArchivo(RutaArchivo ?ArchivoCargado)
@@ -26,7 +25,7 @@ define
           Contenido = {File read(list:$ size:all)}
           {File close}
           ArchivoCargado = {New Archivo.archivo init(RutaArchivo Contenido 'txt')}
-      catch X then {Browser.browse 'Excepción: ' #X# ' No se pudo abrir el archivo deseado.' } end
+      catch X then raise X end end
           
     end
       
