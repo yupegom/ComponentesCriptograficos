@@ -18,7 +18,7 @@ define
       end
          
       meth codificar(TextoACodificar LlaveIdea ?TextoObtenido)
-         Bloque BloqueOriginal BloqueA BloqueB BloqueC BloqueD L L1 L2 ProcesadorTextoACodificar = {New ProcesadorTexto.procesadorTexto init} in
+         Bloque BloqueOriginal BloqueA BloqueB BloqueC BloqueD L L1 L2 ProcesadorTextoACodificar = {New ProcesadorTexto.procesadorTexto init} Subclaves ResCodificacion in
          %Tomamos el texto a codificar y lo convertimos a un binario de 64 bits para sacar los cuatro bloques de 16
          BloqueOriginal = {{New IntBitSupport.intBitSupport init(64 {StringToInt TextoACodificar})} asBinaryString($)}
          Bloque = {ProcesadorTextoACodificar addLeadingZeros( BloqueOriginal 64 $)}
@@ -41,12 +41,16 @@ define
          BloqueD = {New IntBitSupport.intBitSupport init(16 {@opMatematicas toInt({List.take L2 16} 16 $)})}
          {Browser.browse {StringToAtom {BloqueD asBinaryString($)}}}
 
-         TextoObtenido = {New TextoCodificado.textoCodificado init({Codificar BloqueA BloqueB BloqueC BloqueD {Dictionary.new} {LlaveIdea subclaves($)} 0 @opMatematicas})}
+         Subclaves = {LlaveIdea subclaves($)}
+         ResCodificacion = {Codificar BloqueA BloqueB BloqueC BloqueD {Dictionary.new}  Subclaves 0 @opMatematicas}
+         TextoObtenido = {New TextoCodificado.textoCodificado init(ResCodificacion)}
       end
 
       %Al decodificar lo que cambia son las claves generadas a partir de la clave inicial, el proceso es igual al de codificación
       meth decodificar(TextoADecodificar LlaveIdea ?TextoObtenido)
-         TextoObtenido = {New TextoDecodificado.textoDecodificado init({{self codificar(TextoADecodificar LlaveIdea $)} texto($)})}
+         ResDecodificacion in
+         ResDecodificacion = {self codificar(TextoADecodificar LlaveIdea $)}
+         TextoObtenido = {New TextoDecodificado.textoDecodificado init({ResDecodificacion texto($)})}
       end
 
    end
@@ -54,7 +58,7 @@ define
    fun{Codificar BloqueA BloqueB BloqueC BloqueD Results Subclaves Ronda OpMatematicas}
       L1 L2 in
 
-      if Ronda < 1 then 
+      if Ronda < 8 then 
          {Results.put 1 {New IntBitSupport.intBitSupport init(16 {OpMatematicas productoModulo({BloqueA getValue($)} {Subclaves.get 0+(6*Ronda)} $)})}}
          {Results.put 2 {New IntBitSupport.intBitSupport init(16 {OpMatematicas sumaModulo({BloqueB getValue($)} {Subclaves.get 1+(6*Ronda)} $)})}}
          {Results.put 3 {New IntBitSupport.intBitSupport init(16 {OpMatematicas sumaModulo({BloqueC getValue($)} {Subclaves.get 2+(6*Ronda)} $)})}}

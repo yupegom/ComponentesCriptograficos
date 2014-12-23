@@ -129,7 +129,7 @@ define
 		Resultado = {ModExp Valor1 Valor2}
     end
 
-    %No se está usando?
+    
     meth potencia(Operador Potencia ?Resultado)
 		Resultado = {Pow Operador Potencia}
     end

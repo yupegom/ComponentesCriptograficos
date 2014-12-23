@@ -5,13 +5,13 @@ export
    opMatService:OperacionesMatematicas
 define
    class OperacionesMatematicas
-	 
-      meth init
-         skip
+	   attr puertoOpMatematicas
+      meth init(PuertoOperacionesMatematicas)
+         puertoOpMatematicas := PuertoOperacionesMatematicas
       end
 
       meth exponenciacionModular(Base Potencia Modulo ?Resultado)
-         Resultado = {CodificadorRSA.opMatematicas exponenciacionModular(Base Potencia Modulo $)}
+         Resultado = {Send @puertoOpMatematicas exponenciacionModular(Base Potencia Modulo $)}
       end
    end
 end

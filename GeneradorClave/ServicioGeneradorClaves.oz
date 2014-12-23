@@ -9,7 +9,6 @@ import
    GeneradorNumerosService
    IntBitSupport at 'file:../../BitOperations/IntWithBitSupport.ozf'
    Browser
-   GeneradorClave
 export servicioGeneradorClaves:ServicioGeneradorClaves
 define 	 
     class ServicioGeneradorClaves
@@ -32,6 +31,9 @@ define
 	    meth generarSubclavesParaCodificacion(Clave ?Subclaves)
 	    IntWhitBitSupport in
 	    	IntWhitBitSupport = {New IntBitSupport.intBitSupport init(128 Clave)}
+	    	{Browser.browse 'Binary String ClaveIDEA'}
+	    	{Browser.browse {IntWhitBitSupport asBitString($)}}
+	    	{Browser.browse {List.length {IntWhitBitSupport asBinaryString($)}}}
 	    	Subclaves = {GenKeys IntWhitBitSupport}
 	    end
 
@@ -51,7 +53,7 @@ define
 		       Q := {self ObtenerPrimo($)}
 		       PrimosRelativos := {@operacionesService verificarCoprimalidad(P Q $)}
 		       {Loop PrimosRelativos}
-		    end
+		    end		
 		end
 	 
     	in
@@ -79,7 +81,7 @@ define
     meth ObtenerValorDeE(PhiN ?E)
 		PrimosRelativos	Eaux = {NewCell 0}
 		in
-		Eaux := {GeneradorClave.generadorNumeros generarAleatorioDentroDeRangoEspecifico(1 PhiN $)}
+		Eaux := {@operacionesService generarAleatorioDentroDeRango(1 PhiN $)}
 		PrimosRelativos = {@operacionesService verificarCoprimalidad(@Eaux PhiN $)}
 		if PrimosRelativos == true then
 		   E = @Eaux
@@ -90,7 +92,7 @@ define
     end
 
     meth ObtenerValorDePhi(P Q ?PhiN)
-		PhiN = (P - 1) * (Q - 1)  
+		PhiN = (P - 1) * (Q - 1)
 	end
 
     meth ObtenerValorDeD(E PhiN ?D)
@@ -110,15 +112,14 @@ define
 
 	%Agrupa las claves en valores de 16 bits
 	fun{GetKeys Value D}
-	    
-	    proc{Loop TextBlock}
+	    proc{Loop TextBlock} ValueShifted
 	    	Key = {List.length {D.keys}} in
 		    if Key =< 51 then
 			   if {List.length  TextBlock} > 0 then
 			   	  {D.put Key {BitStringToInt {List.reverse {List.take TextBlock 16}}}}
 			      {Loop {List.drop TextBlock 16}}
 			   else
-			   {Loop {{Value shift(16 $)} asBinaryString($)}}
+			   	  ValueShifted = {GetKeys {Value shift(25 $)} D}
 			   end
 			end
 

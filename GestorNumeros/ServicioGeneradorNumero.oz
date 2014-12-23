@@ -14,7 +14,7 @@ define
 	    end
 
 	    meth generarNumeroAleatorio(TamanoClave AleatorioAGenerar ?Aleatorio)
-			Num
+			AleatorioRango
 			T = {NewCell 0}
 		   
 	    	in
@@ -22,8 +22,8 @@ define
 		 
 			if ( @T  == TamanoClave ) then Aleatorio = @AleatorioAGenerar
 			else
-			   {self generarAleatorioDentroDeRango(1111111111 10000000000 Num)}
-			   AleatorioAGenerar := { Append @AleatorioAGenerar { IntToString Num } }
+			   {self generarAleatorioDentroDeRango(1111111111 10000000000 AleatorioRango)}
+			   AleatorioAGenerar := { Append @AleatorioAGenerar { IntToString AleatorioRango } }
 			   {self generarNumeroAleatorio(TamanoClave AleatorioAGenerar Aleatorio)}
 			end
 		end

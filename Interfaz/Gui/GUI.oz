@@ -9,7 +9,7 @@ import
    GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
    Application(exit)
    %Browser
-
+   
 define
 
 %Flujos y puertos para el alambrado de componentes
@@ -43,7 +43,7 @@ define
       meth cargarArchivo(RutaArchivo ?Contenido)
          Archivo in
          Archivo = {Send PuertoOperacionesArchivo cargarArchivo(RutaArchivo $) } 
-         {Archivo contenido($)}
+         Contenido = {Archivo contenido($)}
       end
 
       meth codificar(TipoCodificacion RutaClave TextoACodificar ?TextoCodificado)
@@ -79,8 +79,8 @@ define
       RutaArchivo={QTk.dialogbox save($)} Contenido
    in  
       if RutaArchivo \= nil then
-   	 Contenido={TextHandle get($)}
-   	 {InterfaceController almacenarArchivo(Contenido RutaArchivo)}
+       Contenido={TextHandle get($)}
+       {InterfaceController almacenarArchivo(Contenido RutaArchivo)}
       end
    end  
  
@@ -90,7 +90,7 @@ define
    in  
       if RutaArchivo \= nil then
          Contenido = {InterfaceController cargarArchivo(RutaArchivo $)}  
-	     {TextHandle set( {Archivo contenido($)} )}
+        {TextHandle set( Contenido )}
       end
    end
 
@@ -161,30 +161,31 @@ define
    end
 
    Toolbar=lr(glue:we
-	      tbbutton(text:"Cargar" glue:w action:CargarArchivo)
-	      tbbutton(text:"Guardar" glue:w action:AlmacenarArchivo)
-	      tbbutton(text:"Codificar" glue:w action:CodificarTexto)
+         tbbutton(text:"Cargar" glue:w action:CargarArchivo)
+         tbbutton(text:"Guardar" glue:w action:AlmacenarArchivo)
+         tbbutton(text:"Codificar" glue:w action:CodificarTexto)
          tbbutton(text:"Decodificar" glue:w action:DecodificarTexto)
-	      tbbutton(text:"Cerrar" glue:w action:CerrarAplicacion))
+         tbbutton(text:"Cerrar" glue:w action:CerrarAplicacion))
 
    TipoLlaves=td(radiobutton(text:'RSA' 
-			     init:true 
-			     group:radio1 handle:Handle )
-		 radiobutton(text:"IDEA"
-			     group:radio1) )
+              init:true 
+              group:radio1 handle:Handle )
+       radiobutton(text:"IDEA"
+              group:radio1) )
  
    
  
    Window={QTk.build td(Toolbar
-			text(glue:nswe handle:TextHandle bg:white tdscrollbar:true)
-			lr( 
-			    tbbutton(text:"Generar Claves"
-				     glue:w  action:GenerarLlaves	)
-			    TipoLlaves)
-		       )}
+         text(glue:nswe handle:TextHandle bg:white tdscrollbar:true)
+         lr( 
+             tbbutton(text:"Generar Claves"
+                 glue:w  action:GenerarLlaves   )
+             TipoLlaves)
+             )}
    
-   %{AlambrarComponentes}                  
+   %{AlambrarComponentes}     
+               
    {Window show}
+   
    end
 end
-

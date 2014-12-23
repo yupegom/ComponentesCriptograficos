@@ -15,19 +15,21 @@ define
       PuertoClaves = PuertoGeneradorClaves
       PuertoOpMatematicas = PuertoOperacionesMatematicas
       {Componente.nuevoPuertoReq
-       proc{$Mensaje} CodificadorIDEA = {New IDEA.codificador init} Clave
+       proc{$Mensaje} CodificadorIDEA = {New IDEA.codificador init} Clave Codificacion Decodificacion
        in
 	  case Mensaje of codificar(TextoACodificar IdeaKey ?TextoCodificado) then
 	     try
 	     	Clave = {New ClaveCodificacionIDEA.claveCodificacionIDEA init(IdeaKey)}
-			TextoCodificado = {{CodificadorIDEA codificar(TextoACodificar Clave $)} texto($)}
+	     	Codificacion = {CodificadorIDEA codificar(TextoACodificar Clave $)}
+			TextoCodificado = {Codificacion texto($)}
 		 catch X then  {Browser.browse 'Excepción al Codificar con IDEA' #X# ' No se logró realizar la codificación.' }
 	     end
 
 	  [] decodificar(TextoADecodificar IdeaKey ?TextoDecodificado) then
 	     try
 			Clave = {New ClaveDecodificacionIDEA.claveDecodificacionIDEA init(IdeaKey)}
-			TextoDecodificado = {{CodificadorIDEA decodificar(TextoADecodificar Clave $)} texto($)}
+			Decodificacion = {CodificadorIDEA decodificar(TextoADecodificar Clave $)}
+			TextoDecodificado = {Decodificacion texto($)}
 		 catch X then  {Browser.browse 'Excepción al Decodificar con IDEA ' #X# ' No se logró realizar la decodificación.' }
 	     end
 	  

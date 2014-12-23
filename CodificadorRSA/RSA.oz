@@ -11,16 +11,17 @@ define
 
       attr opMatematicas procesadorTexto
 
-      meth init
-   	   opMatematicas := {New OperacionesMatematicas.opMatService init}
+      meth init(PuertoOperacionesMatematicas)
+   	   opMatematicas := {New OperacionesMatematicas.opMatService init(PuertoOperacionesMatematicas)}
          procesadorTexto := {New ProcesadorTexto.procesadorTexto init}
       end
 
          
-      meth codificar(TextoACodificar ClavePublica TamanoBloque ?Codificacion)
-      	TextoAscii in
+      meth codificar(TextoACodificar ClavePublica TamanoBloque ?TextCodificaco)
+      	TextoAscii Codificacion in
          TextoAscii = {@procesadorTexto textToASCIICode(TextoACodificar $)}
-         Codificacion = {New TextoCodificado.textoCodificado init( {self CodificarBloques(TextoAscii {ClavePublica getN($)} {ClavePublica getE($)} TamanoBloque $)} )}
+         Codificacion = {self CodificarBloques(TextoAscii {ClavePublica getN($)} {ClavePublica getE($)} TamanoBloque $)}
+         TextCodificaco = {New TextoCodificado.textoCodificado init( Codificacion )}
       end
 
       meth decodificar(TextoADecodificar ClavePrivada TamanoBloque ?ClearText)
