@@ -87,15 +87,15 @@ define
          {Results.put 17 {New IntBitSupport.intBitSupport init(16 {OpMatematicas sumaModulo({BloqueC getValue($)} {Subclaves.get 50} $)})}}
          {Results.put 18 {New IntBitSupport.intBitSupport init(16 {OpMatematicas productoModulo({BloqueD getValue($)} {Subclaves.get 51} $)})}}
 
-         {Browser.browse 'Bloques codificados'}
-         {Browser.browse {StringToAtom {{Results.get 15} asBinaryString($)}}}
-         {Browser.browse {List.length {{Results.get 15} asBinaryString($)}}}
-         {Browser.browse {StringToAtom {{Results.get 16} asBinaryString($)}}}
-         {Browser.browse {List.length {{Results.get 16} asBinaryString($)}}}
-         {Browser.browse {StringToAtom {{Results.get 17} asBinaryString($)}}}
-         {Browser.browse {List.length {{Results.get 17} asBinaryString($)}}}
-         {Browser.browse {StringToAtom {{Results.get 18} asBinaryString($)}}}
-         {Browser.browse {List.length {{Results.get 18} asBinaryString($)}}}
+         %{Browser.browse 'Bloques codificados'}
+         %{Browser.browse {StringToAtom {{Results.get 15} asBinaryString($)}}}
+         %{Browser.browse {List.length {{Results.get 15} asBinaryString($)}}}
+         %{Browser.browse {StringToAtom {{Results.get 16} asBinaryString($)}}}
+         %{Browser.browse {List.length {{Results.get 16} asBinaryString($)}}}
+         %{Browser.browse {StringToAtom {{Results.get 17} asBinaryString($)}}}
+         %{Browser.browse {List.length {{Results.get 17} asBinaryString($)}}}
+         %{Browser.browse {StringToAtom {{Results.get 18} asBinaryString($)}}}
+         %{Browser.browse {List.length {{Results.get 18} asBinaryString($)}}}
 
          %L1={List.append {IntToString {{Results.get 15} getValue($)}} {IntToString {{Results.get 16} getValue($)}}}
          %L2={List.append {IntToString {{Results.get 17} getValue($)}} {IntToString {{Results.get 18} getValue($)}}}
