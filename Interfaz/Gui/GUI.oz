@@ -84,7 +84,7 @@ define
       end
    end  
  
-   proc{CargarArchivo} 
+   proc{CargarArchivo}
       Contenido
       RutaArchivo={RutaArchivoACargar ".txt" "Archivo de texto" "txt"}
    in  
@@ -148,9 +148,8 @@ define
    proc{RutaArchivoACargar Tipo Desc DefaultExtension ?RutaArchivo} 
       
       RutaArchivo={QTk.dialogbox load(defaultextension:DefaultExtension 
-                  initialdir:"." 
-                  title:"Cargar Archivo ..." 
-                  initialfile:"" 
+                  initialdir:"/home/yuliban" 
+                  title:"Cargar Archivo ..."  
                   filetypes:q(q(Desc q(Tipo))
                    ) $)}
    end

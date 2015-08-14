@@ -17,7 +17,6 @@ define
 		   	case Mensaje of codificar(TextoACodificar N E TamanoBloque ?TextoCodificado) then
 		   		try
 					Clave = {New ClavePublicaRSA.clavePublicaRSA init(E N)}
-					{Browser.browse 'Si obtiene la clave'}
 					TextoCodificado = {{CodificadorRSA codificar(TextoACodificar Clave TamanoBloque $)} texto($)}
 			 	catch X then  {Browser.browse 'Excepción al Codificar ' #X# ' No se logró realizar la codificación.' }
 		    	end

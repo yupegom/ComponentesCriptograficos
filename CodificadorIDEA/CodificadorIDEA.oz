@@ -5,6 +5,7 @@ import
    IDEA
    ClaveCodificacionIDEA
    ClaveDecodificacionIDEA
+   OperacionesMatematicas
 export
    codificadorIDEA:ICodificadorIDEA
    generacionClave: ServicioRequGeneradorClave
@@ -15,12 +16,13 @@ define
       PuertoClaves = PuertoGeneradorClaves
       PuertoOpMatematicas = PuertoOperacionesMatematicas
       {Componente.nuevoPuertoReq
-       proc{$Mensaje} CodificadorIDEA = {New IDEA.codificador init} Clave Codificacion Decodificacion
+       proc{$Mensaje} CodificadorIDEA = {New IDEA.codificador init({New OperacionesMatematicas.opMatService init})} Clave Codificacion Decodificacion Subclaves
        in
 	  case Mensaje of codificar(TextoACodificar IdeaKey ?TextoCodificado) then
 	     try
 	     	Clave = {New ClaveCodificacionIDEA.claveCodificacionIDEA init(IdeaKey)}
-	     	Codificacion = {CodificadorIDEA codificar(TextoACodificar Clave $)}
+	     	Subclaves = {Clave subclaves($)}
+	     	Codificacion = {CodificadorIDEA codificar(TextoACodificar Subclaves $)}
 			TextoCodificado = {Codificacion texto($)}
 		 catch X then  {Browser.browse 'Excepción al Codificar con IDEA' #X# ' No se logró realizar la codificación.' }
 	     end

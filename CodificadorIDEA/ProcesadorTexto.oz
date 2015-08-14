@@ -1,6 +1,4 @@
 functor
-import
-%Browser
 export
    procesadorTexto:ProcesadorTexto
 define

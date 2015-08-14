@@ -1,6 +1,5 @@
 functor
 import
-   %Browser
    ComponenteMatematico
 export
    matematicaAvanzada:FuncionesAvanzadas
@@ -26,24 +25,32 @@ define
 
     meth calcularInversaModular(Valor1 Valor2 ?InversaModular)
 		Inversa  in
-		{Euclide Valor1 Valor2 Inversa _}
-		if {Int.isNat Inversa} then
-		   InversaModular = Inversa
+		if Valor1 < 2 then 
+			InversaModular = Valor1
+	 	elseif Valor1 == 65537 then InversaModular = 0
 		else
-		   InversaModular = Inversa + Valor2
+			{Euclide Valor1 Valor2 Inversa _}
+			if {Int.isNat Inversa} then
+			   InversaModular = Inversa
+			else
+			   InversaModular = Inversa + Valor2
+			end
 		end
 	 
     end
 
    	meth productoModulo(Factor1 Factor2 ?Prod)
-	 
 		fun{Loop Res}
 	      	if Res >= 65537 then
 	      	   {Loop {Int.'mod' Res 65537}}
+	      	elseif Res == 65536 then 0
 			else Res
 			end	
      	end in
-	 	Prod = {Loop Factor1*Factor2}
+     	if Factor1 == 0 then Prod = {Loop 65536*Factor2}
+     	elseif Factor2 == 0 then Prod = {Loop Factor1*65536}
+	 	else Prod = {Loop Factor1*Factor2}
+	 	end
     end
 
     meth exponenciacionModular(Base Potencia Modulo ?Resultado)
@@ -113,7 +120,9 @@ define
     end
 
     meth inversaAditivaModular(Sumando ?Sum)
-     	Sum = 65536 - Sumando
+    	if Sumando == 0 then Sum = 0
+     	else Sum = 65536 - Sumando
+     	end
     end
     
     %Convierte un string binario a decimal
@@ -191,32 +200,3 @@ define
 	end
 
 end
-
-	 
-
-
-
-
-
-
-   
-%    proc {GenAleatorio ?Al}
-%       PuertoGenNumero
-%       Flujo
-%       RangoInferior = 1
-%       RangoSuperior = 10
-	 
-%    in
-
-%       thread
-% 	 {GestorNumeros.gestorNumero Flujo PuertoGenNumero}
-%       end
-
-  
-%       {Send PuertoGenNumero  generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior Al)}
-%       {Browser.browse 'Al' Al}
-   
-%    end
-
-
-% La suma en módulo 2^16 implica que el resultado de la suma no puede ser mayor a 2^16 (65536). Esta restricción no será tenida en cuenta ya que los resultados que obtendremos no serán mayores a dicho valor, es decir usaremos enteros de 16 bits y realizaremos sumas normales

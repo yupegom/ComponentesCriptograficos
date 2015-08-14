@@ -50,7 +50,7 @@ end
 
 declare
 
-IntegerWhitBitSupport = {New IntBitSupport.intBitSupport init(128 10112613299966429639576403088473158970)}
+IntegerWhitBitSupport = {New IntBitSupport.intBitSupport init(64 1234567812345678)}
 {Browse {StringToAtom {IntegerWhitBitSupport asBinaryString($)}}}
 {Browse {IntegerWhitBitSupport getValue($)}}
 {Browse {GenKeys IntegerWhitBitSupport 1}}

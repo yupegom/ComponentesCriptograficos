@@ -1,6 +1,4 @@
 functor
-import
-   CodificadorRSA
 export
    opMatService:OperacionesMatematicas
 define

@@ -15,7 +15,10 @@ define
 
 
       meth inversaMultiplicativa(Input ?Output)
-        Output = {GeneradorClave.realizarOperacion calcularInversaModular(Input 65537 $)}
+        if Input < 2 then Output = Input
+        else
+          Output = {GeneradorClave.realizarOperacion calcularInversaModular(Input 65537 $)}
+        end
       end
 
       meth calcularInversaModular(Input Input2 ?Output)

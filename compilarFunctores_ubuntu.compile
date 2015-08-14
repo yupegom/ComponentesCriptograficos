@@ -36,4 +36,4 @@ linux32 ozc -c CodificadorIDEA/TextoDecodificado.oz -o CodificadorIDEA/TextoDeco
 linux32 ozc -c CodificadorIDEA/ProcesadorTexto.oz -o CodificadorIDEA/ProcesadorTexto.ozf
 linux32 ozc -c CodificadorIDEA/OperacionesMatematicas.oz -o CodificadorIDEA/OperacionesMatematicas.ozf
 linux32 ozc -c CodificadorIDEA/IDEA.oz -o CodificadorIDEA/IDEA.ozf
-linux32 ozc -x Interfaz/Gui/GUI.oz -o Interfaz/Gui/GUI.sh
+linux32 ozengine Interfaz/Gui/GUI.oz -o Interfaz/Gui/GUI.ozf

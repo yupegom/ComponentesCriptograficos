@@ -58,3 +58,9 @@ X = {SumModulo 3452326 7682329}
 Y = {InvAditiva X}
 Z = {SumModulo X Y}
 {Browse Z}
+
+declare L = 1947 N R
+N = {CalcularInversaModular L 65537}
+R = {ProdModulo 1947 20028}
+{Browse 'Valor de la inversa de 1947' #N}
+{Browse 'Es 20028 la inversa de 1947??' #R}
