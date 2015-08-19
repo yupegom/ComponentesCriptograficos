@@ -6,6 +6,7 @@ import
    ProcesadorTexto
    TextoCodificado
    TextoDecodificado
+   StringPlus at 'x-oz://system/String.ozf'
 export 
    codificador:CodificadorIDEA
 define 	 
@@ -22,12 +23,14 @@ define
          TextoAscii Codificacion in
          TextoAscii = {@procesadorTexto textToASCIICode(TextoACodificar $)}
          Codificacion = {self CodificarBloques(TextoAscii Subclaves 16 $)}
+         {Browser.browse 'Codificacion ' # {StringToAtom Codificacion}}
          TextCodificaco = {New TextoCodificado.textoCodificado init( Codificacion )}
       end
          
       meth CodificarBloque(TextoACodificar Subclaves ?TextoObtenido)
          Bloque BloqueA BloqueB BloqueC BloqueD L L1 L2  ResCodificacion in
          %Tomamos el texto a codificar y lo convertimos a un binario de 64 bits para sacar los cuatro bloques de 16
+         {Browser.browse 'Este es el bloque a codificar o decodificar'}
          {Browser.browse {StringToAtom TextoACodificar}}
          Bloque = {{New IntBitSupport.intBitSupport init(64 {StringToInt { List.dropWhile TextoACodificar IsZero } })} asBinaryString($)}
          BloqueA = {New IntBitSupport.intBitSupport init(16 {@opMatematicas toInt({List.take Bloque 16} 16 $)})}
@@ -37,10 +40,12 @@ define
          BloqueC = {New IntBitSupport.intBitSupport init(16 {@opMatematicas toInt({List.take L1 16} 16 $)})}
          {List.drop L1 16 L2}
          BloqueD = {New IntBitSupport.intBitSupport init(16 {@opMatematicas toInt({List.take L2 16} 16 $)})}
-         %Subclaves = {LlaveIdea subclaves($)}
+         {Browser.browse 'Va a co-dedificar'}
 
          ResCodificacion = {Codificar BloqueA BloqueB BloqueC BloqueD {Dictionary.new}  Subclaves 0 @opMatematicas}
          %TextoObtenido = {New TextoCodificado.textoCodificado init(ResCodificacion)}
+         {Browser.browse 'obtenido codificación decodificación'}
+         {Browser.browse {StringToAtom ResCodificacion}}
          TextoObtenido = ResCodificacion %{@procesadorTexto addLeadingZeros(ResCodificacion 16 $)}
       end
 
@@ -48,22 +53,43 @@ define
       meth decodificar(TextoADecodificar LlaveIdea ?TextoObtenido)
          ResDecodificacion Subclaves in
          Subclaves = {LlaveIdea subclaves($)}
-         ResDecodificacion = {self CodificarBloques(TextoADecodificar Subclaves 50 $)}
-         TextoObtenido = {New TextoDecodificado.textoDecodificado init(ResDecodificacion)}
+         ResDecodificacion = {self DecodificarBloques(TextoADecodificar Subclaves $)}
+         {Browser.browse 'Si decodifica'}
+         %TextoObtenido = {New TextoDecodificado.textoDecodificado init({@procesadorTexto asciiTextToClearText(ResDecodificacion $)})}
+         %{Browser.browse {StringToAtom ResDecodificacion}}
+         TextoObtenido = "hola"
       end
 
       meth CodificarBloques(TextoACodificar Subclaves TamanoBloque ?TextoCodificado)
-
+         
          fun{CodificarBloquesAux TextToEncrypt ResultadoCodificacion}
-
+            StringConDash in
             if {List.length TextToEncrypt} > 0 then
-               
-               {CodificarBloquesAux {List.drop TextToEncrypt TamanoBloque} {List.append ResultadoCodificacion {self CodificarBloque( {List.take TextToEncrypt TamanoBloque} Subclaves $ ) } } }
+               if{List.length ResultadoCodificacion} > 0 then
+                  StringConDash = {List.append ResultadoCodificacion "-"}
+               else StringConDash = ResultadoCodificacion
+               end
+
+               {CodificarBloquesAux {List.drop TextToEncrypt TamanoBloque} {List.append StringConDash {self CodificarBloque( {List.take TextToEncrypt TamanoBloque} Subclaves $ ) } } }
             else
                ResultadoCodificacion 
                
             end
          end in TextoCodificado = {CodificarBloquesAux TextoACodificar ""}
+      end
+
+      meth DecodificarBloques(TextoACodificar Subclaves ?TextoCodificado)
+         StringSplit = {StringPlus.split TextoACodificar "-"}
+         {Browser.browse 'split!!!'}
+         {Browser.browse StringSplit}
+         fun{CodificarBloquesAux TextToEncrypt ResultadoCodificacion}
+            case 
+               TextToEncrypt of H|nil then {Browser.browse 'A decodif!!' # H} {List.append ResultadoCodificacion {self CodificarBloque( H Subclaves $ ) }}
+               [] H|T then {CodificarBloquesAux T {List.append ResultadoCodificacion {self CodificarBloque( H Subclaves $ ) }} }
+            end
+               
+         end
+         in TextoCodificado = {CodificarBloquesAux StringSplit ""}
       end
 
    end
@@ -110,5 +136,6 @@ define
    fun {IsZero A}
       A == 48
    end
+
 
 end
