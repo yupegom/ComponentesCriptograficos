@@ -2,22 +2,34 @@ functor
 import 
    IntBitSupport at 'file:../../BitOperations/IntWithBitSupport.ozf'
    Dictionary at 'x-oz://system/adt/Dictionary.ozf'
+   Browser
+   ProcesadorTexto
    TextoCodificado
    TextoDecodificado
 export 
    codificador:CodificadorIDEA
 define 	 
+%orientado a entregar esructuras de datos
    class CodificadorIDEA
 
-      attr opMatematicas textoCodificado textoDecodificado
+      attr opMatematicas textoCodificado textoDecodificado procesadorTexto
       meth init(Matematicas)
          opMatematicas := Matematicas
+         procesadorTexto := {New ProcesadorTexto.procesadorTexto init}
+      end
+
+      meth codificar(TextoACodificar Subclaves ?TextCodificaco)
+         TextoAscii Codificacion in
+         TextoAscii = {@procesadorTexto textToASCIICode(TextoACodificar $)}
+         Codificacion = {self CodificarBloques(TextoAscii Subclaves 16 $)}
+         TextCodificaco = {New TextoCodificado.textoCodificado init( Codificacion )}
       end
          
-      meth codificar(TextoACodificar Subclaves ?TextoObtenido)
+      meth CodificarBloque(TextoACodificar Subclaves ?TextoObtenido)
          Bloque BloqueA BloqueB BloqueC BloqueD L L1 L2  ResCodificacion in
          %Tomamos el texto a codificar y lo convertimos a un binario de 64 bits para sacar los cuatro bloques de 16
-         Bloque = {{New IntBitSupport.intBitSupport init(64 {StringToInt TextoACodificar})} asBinaryString($)}
+         {Browser.browse {StringToAtom TextoACodificar}}
+         Bloque = {{New IntBitSupport.intBitSupport init(64 {StringToInt { List.dropWhile TextoACodificar IsZero } })} asBinaryString($)}
          BloqueA = {New IntBitSupport.intBitSupport init(16 {@opMatematicas toInt({List.take Bloque 16} 16 $)})}
          {List.drop Bloque 16 L}
          BloqueB = {New IntBitSupport.intBitSupport init(16 {@opMatematicas toInt({List.take L 16} 16 $)})}
@@ -28,15 +40,30 @@ define
          %Subclaves = {LlaveIdea subclaves($)}
 
          ResCodificacion = {Codificar BloqueA BloqueB BloqueC BloqueD {Dictionary.new}  Subclaves 0 @opMatematicas}
-         TextoObtenido = {New TextoCodificado.textoCodificado init(ResCodificacion)}
+         %TextoObtenido = {New TextoCodificado.textoCodificado init(ResCodificacion)}
+         TextoObtenido = ResCodificacion %{@procesadorTexto addLeadingZeros(ResCodificacion 16 $)}
       end
 
       %Al decodificar lo que cambia son las claves generadas a partir de la clave inicial, el proceso es igual al de codificación
       meth decodificar(TextoADecodificar LlaveIdea ?TextoObtenido)
          ResDecodificacion Subclaves in
          Subclaves = {LlaveIdea subclaves($)}
-         ResDecodificacion = {self codificar(TextoADecodificar Subclaves $)}
-         TextoObtenido = {New TextoDecodificado.textoDecodificado init({ResDecodificacion texto($)})}
+         ResDecodificacion = {self CodificarBloques(TextoADecodificar Subclaves 50 $)}
+         TextoObtenido = {New TextoDecodificado.textoDecodificado init(ResDecodificacion)}
+      end
+
+      meth CodificarBloques(TextoACodificar Subclaves TamanoBloque ?TextoCodificado)
+
+         fun{CodificarBloquesAux TextToEncrypt ResultadoCodificacion}
+
+            if {List.length TextToEncrypt} > 0 then
+               
+               {CodificarBloquesAux {List.drop TextToEncrypt TamanoBloque} {List.append ResultadoCodificacion {self CodificarBloque( {List.take TextToEncrypt TamanoBloque} Subclaves $ ) } } }
+            else
+               ResultadoCodificacion 
+               
+            end
+         end in TextoCodificado = {CodificarBloquesAux TextoACodificar ""}
       end
 
    end
@@ -79,5 +106,9 @@ define
    %fun {GetValue IntValue}
     %  {StringToAtom {IntValue asBinaryString($)}}
    %end
+
+   fun {IsZero A}
+      A == 48
+   end
 
 end
