@@ -2,7 +2,7 @@
 <project name="MyTask" basedir="." default="use">
 
 	<property name="jar.dir" value="C:/Users/Fernando/Documents/My Dropbox/ComponentesCriptograficos/"/>
-    <!--property name="jar.dir" value="/home/mauricio/Documentos/Personal/Proyecto/Dropbox/ComponentesCriptograficos/"/-->
+    <!--property name="jar.dir" value="/home/yuliban/Dropbox/ComponentesCriptograficos/"/-->
 	
 	<target name="use" description="Use the Task" >
 	        <taskdef name="compilefunctor" classname="oz.compile.functor.task.CompileFunctor" classpath="${jar.dir}${ant.project.name}.jar"/>

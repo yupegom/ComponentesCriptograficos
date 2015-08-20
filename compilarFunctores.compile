@@ -15,13 +15,17 @@ ozc -c GeneradorClave/OperacionesMatematicasService.oz -o GeneradorClave/Operaci
 ozc -c GeneradorClave/GeneradorNumerosService.oz -o GeneradorClave/GeneradorNumerosService.ozf
 ozc -c GestorArchivo/GestorArchivo.oz -o GestorArchivo/GestorArchivo.ozf
 ozc -c GestorArchivo/Archivo.oz -o GestorArchivo/Archivo.ozf
-ozc -c GestorArchivo/CargarArchivo.oz -o GestorArchivo/CargarArchivo.ozf
-ozc -c GestorArchivo/AlmacenarArchivo.oz -o GestorArchivo/AlmacenarArchivo.ozf
+ozc -c GestorArchivo/ServicioOperacionesArchivo.oz -o GestorArchivo/ServicioOperacionesArchivo.ozf
 ozc -c BitOperations/IntWithBitSupport.oz -o BitOperations/IntWithBitSupport.ozf
 ozc -c CodificadorRSA/ClaveRSA.oz -o CodificadorRSA/ClaveRSA.ozf
 ozc -c CodificadorRSA/ClavePrivadaRSA.oz -o CodificadorRSA/ClavePrivadaRSA.ozf
 ozc -c CodificadorRSA/ClavePublicaRSA.oz -o CodificadorRSA/ClavePublicaRSA.ozf
 ozc -c CodificadorRSA/CodificadorRSA.oz -o CodificadorRSA/CodificadorRSA.ozf
+ozc -c CodificadorRSA/OperacionesMatematicas.oz -o CodificadorRSA/OperacionesMatematicas.ozf
+ozc -c CodificadorRSA/ProcesadorTexto.oz -o CodificadorRSA/ProcesadorTexto.ozf
+ozc -c CodificadorRSA/TextoCodificado.oz -o CodificadorRSA/TextoCodificado.ozf
+ozc -c CodificadorRSA/TextoDecodificado.oz -o CodificadorRSA/TextoDecodificado.ozf
+ozc -c CodificadorRSA/RSA.oz -o CodificadorRSA/RSA.ozf
 ozc -c CodificadorIDEA/Clave.oz -o CodificadorIDEA/Clave.ozf
 ozc -c CodificadorIDEA/ClaveIDEA.oz -o CodificadorIDEA/ClaveIDEA.ozf
 ozc -c CodificadorIDEA/ClaveCodificacionIDEA.oz -o CodificadorIDEA/ClaveCodificacionIDEA.ozf
@@ -32,7 +36,4 @@ ozc -c CodificadorIDEA/TextoDecodificado.oz -o CodificadorIDEA/TextoDecodificado
 ozc -c CodificadorIDEA/ProcesadorTexto.oz -o CodificadorIDEA/ProcesadorTexto.ozf
 ozc -c CodificadorIDEA/OperacionesMatematicas.oz -o CodificadorIDEA/OperacionesMatematicas.ozf
 ozc -c CodificadorIDEA/IDEA.oz -o CodificadorIDEA/IDEA.ozf
-ozc -c CodificadorRSA/ProcesadorTexto.oz -o CodificadorRSA/ProcesadorTexto.ozf
-ozc -c CodificadorRSA/CodificadorRSARealize.oz -o CodificadorRSA/CodificadorRSARealize.ozf
-ozc -c LibreriaCriptografica/LibreriaCriptografica.oz -o LibreriaCriptografica/LibreriaCriptografica.ozf
 ozc -x Interfaz/Gui/GUI.oz -o Interfaz/Gui/GUI.exe

@@ -7,8 +7,12 @@ import
    ServicioGeneradorClaves
 export
    generadorClave:IGeneradorClave
-define
-   proc {IGeneradorClave PuertoAlmacenamiento Flujo PuertoGenerador}
+   realizarOperacion: RealizarOperacion
+   generadorNumeros: GenerarNumeros
+define PuertoOpMatematicas PuertoGenNumeros
+   proc {IGeneradorClave PuertoOperacionesMatematicas PuertoGeneradorNumeros PuertoAlmacenamiento Flujo PuertoGenerador}
+   	  PuertoOpMatematicas = PuertoOperacionesMatematicas
+   	  PuertoGenNumeros = PuertoGeneradorNumeros
       {Componente.nuevoPuertoReq
        proc{$Mensaje} GeneradorClave = {New ServicioGeneradorClaves.servicioGeneradorClaves init} ClavePrivadaRSA ClavePublicaRSA Clave ClaveIDEA ClaveCodIDEA ClaveDecodIDEA in
 	  case Mensaje of generarLlave(TipoClaveAGenerar) then
@@ -46,7 +50,17 @@ define
 	  end
        end Flujo PuertoGenerador}
    end
+
    proc {AlmacenarArchivo Puerto Msg}
       {Componente.proveerServ Puerto Msg}
    end
+
+   proc {RealizarOperacion Msg}
+      {Componente.proveerServ PuertoOpMatematicas Msg}
+   end
+
+   proc {GenerarNumeros Msg}
+      {Componente.proveerServ PuertoGenNumeros Msg}
+   end
+
 end

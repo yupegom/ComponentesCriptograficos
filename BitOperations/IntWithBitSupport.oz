@@ -1,13 +1,16 @@
 functor
-
+import
+ProcesadorTexto at 'file:../../CodificadorIDEA/ProcesadorTexto.ozf'
 export intBitSupport:IntegerWithBitSupport
 define
    class IntegerWithBitSupport
 
-      attr value ibs
+      attr value ibs length procesadorTexto
 
       meth init( Length Value )
          value := Value
+         length := Length
+         procesadorTexto := {New ProcesadorTexto.procesadorTexto init}
          ibs := {IntToBitString Length @value }
       end
 
@@ -20,12 +23,12 @@ define
       end
 
       meth asBinaryString( ?BinaryString )
-         BinaryString = {IntToBinaryString @value}
+         BinaryString = {@procesadorTexto addLeadingZeros({IntToBinaryString @value} @length $)}
       end
 
       %Recibe el número de rotaciones que deben hacerse
       meth shift( N ?IntegerAfterShiftRotation )
-         IntegerAfterShiftRotation = {Shift N @ibs}
+         IntegerAfterShiftRotation = {Shift N @length @ibs}
       end
 
       meth xor(Integer Length ?IntegerXOR)
@@ -37,10 +40,10 @@ define
 
    end
 
-   fun {Shift N IBS}
-        P = fun {$ X} if( X + N ) >= 128 then (X + N - 128) else X + N end  end
+   fun {Shift N Length IBS}
+        P = fun {$ X} if( X + N ) >= Length then (X + N - Length) else X + N end  end
       in
-        {New IntegerWithBitSupport init(128 {BitListToInt {List.map {BitString.toList IBS} P}})}
+        {New IntegerWithBitSupport init(Length {BitListToInt {List.map {BitString.toList IBS} P}})}
        
    end
 

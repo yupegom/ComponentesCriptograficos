@@ -1,167 +1,148 @@
 functor
 import
-   %Browser
-   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
+   ComponenteMatematico
 export
    matematicaAvanzada:FuncionesAvanzadas
 define
    class FuncionesAvanzadas
        
-      meth init
-	 skip
-      end
-
-     %  meth getInstance(?Instance)
-% 	 lock L then
-% 	    if{Not{IsDet Instance}} then
-% 	       Instance = {New FuncionesAvanzadas init}
-	    
-% 	    end
-% 	 end
-%       end
+    meth init
+		skip
+    end
       
-      meth calcularFuncionDeEuclides(Valor1 Valor2 ?Mcd)
+    meth calcularFuncionDeEuclides(Valor1 Valor2 ?Mcd)
 	
-	 Residuo = {NewCell 0} in
-	 Residuo := {Int.'mod' Valor1 Valor2}
+		Residuo = {NewCell 0} in
+	 	Residuo := {Int.'mod' Valor1 Valor2}
 
-	 if @Residuo  == 0 then Mcd = Valor2
+	 	if @Residuo  == 0 then Mcd = Valor2
     	 
-	 else
-	    {self calcularFuncionDeEuclides(Valor2 @Residuo Mcd)}
-	 end
+		else
+	    	{self calcularFuncionDeEuclides(Valor2 @Residuo Mcd)}
+		end
 	
-      end
+    end
 
-      meth realizarTestDeFermat(Valor ?EsProbablePrimo)
+    meth calcularInversaModular(Valor1 Valor2 ?InversaModular)
+		Inversa  in
+		if Valor1 < 2 then 
+			InversaModular = Valor1
+	 	elseif Valor1 == 65537 then InversaModular = 0
+		else
+			{Euclide Valor1 Valor2 Inversa _}
+			if {Int.isNat Inversa} then
+			   InversaModular = Inversa
+			else
+			   InversaModular = Inversa + Valor2
+			end
+		end
+	 
+    end
 
-	 RangoInferior = 1 RangoSuperior = Valor - 1
-	 Aleatorio={NewCell 0} K = 40 MCD = {NewCell 0} Res = {NewCell 0}
-	 EsPrimo = {NewCell true}
-	 PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
-      in
-	 for I in 1..K break:B do
+   	meth productoModulo(Factor1 Factor2 ?Prod)
+		fun{Loop Res}
+	      	if Res >= 65537 then
+	      	   {Loop {Int.'mod' Res 65537}}
+	      	elseif Res == 65536 then 0
+			else Res
+			end	
+     	end in
+     	if Factor1 == 0 then Prod = {Loop 65536*Factor2}
+     	elseif Factor2 == 0 then Prod = {Loop Factor1*65536}
+	 	else Prod = {Loop Factor1*Factor2}
+	 	end
+    end
+
+    meth exponenciacionModular(Base Potencia Modulo ?Resultado)
+		Resultado = {ExponenciacionModulo Base Potencia Modulo}
+    end
+
+    meth sumaModulo(Sumando1 Sumando2 ?Sum)
+      
+    	fun{Loop Res}
+      		if Res >= 65536 then
+				{Loop {Int.'mod' Res 65536}}
+			else Res
+			end	
+		end in
+		Sum = {Loop Sumando1+Sumando2}
+    end
+
+    meth realizarTestDeFermat(Valor ?EsProbablePrimo)
+
+		RangoInferior = 1 RangoSuperior = Valor - 1
+		Aleatorio={NewCell 0} K = 40 MCD = {NewCell 0} Res = {NewCell 0}
+		EsPrimo = {NewCell true}
+    in
+		for I in 1..K break:B do
 	   
-	    Aleatorio := {Send PuertoGenNumero generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
-	    MCD := {self calcularFuncionDeEuclides(@Aleatorio Valor $)}
+	    	Aleatorio := {ComponenteMatematico.generacionNumeros generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
+	    	MCD := {self calcularFuncionDeEuclides(@Aleatorio Valor $)}
 
-	    if @MCD \= 1 then
-	       EsPrimo := false
-	       {B}
-	    end
+	    	if @MCD \= 1 then
+	    		EsPrimo := false
+	    		{B}
+	    	end
 
-	    Res := {self calcularPotenciaModulo(@Aleatorio Valor $)}
-	    if @Res \= 1 then
-	       EsPrimo := false
-	       {B}
-	    end
-	    
-	    %{Browser.browse @Aleatorio}
-	 end
-	 EsProbablePrimo = @EsPrimo
+	    	Res := {self CalcularPotenciaModulo(@Aleatorio Valor $)}
+	    	if @Res \= 1 then
+	       		EsPrimo := false
+	       		{B}
+	    	end
+	 	end
+		EsProbablePrimo = @EsPrimo
+    end
+
+    meth verificarCoprimalidad(Valor1 Valor2 ?EsPrimoRelativo)
+		Mcd in
+	 	Mcd = {self calcularFuncionDeEuclides(Valor1 Valor2 $)}
+		if Mcd == 1 then
+		   EsPrimoRelativo = true
+		else
+		   EsPrimoRelativo = false
+		end
 	 
-	
-      end
+    end
 
-      meth sumaModulo(Sumando1 Sumando2 ?Sum)
-      
-      fun{Loop Res}
-      	if Res >= 65536 then
-      	   
-		   {Loop {Int.'mod' Res 65536}}
-		else Res
-		end	
-      end in
-
-	 Sum = {Loop Sumando1+Sumando2}
-     end
-
-     meth inversaAditivaModular(Sumando ?Sum)
-     	Sum = 65536 - Sumando
-     end
-
-      meth productoModulo(Factor1 Factor2 ?Prod)
-	 
-	 fun{Loop Res}
-      	if Res >= 65537 then
-      	   {Loop {Int.'mod' Res 65537}}
-		else Res
-		end	
-     end in
-	 Prod = {Loop Factor1*Factor2}
-      end
-
-      meth calcularInversaModular(Valor1 Valor2 ?InversaModular)
-	 Inversa  in
-	 {Euclide Valor1 Valor2 Inversa _}
-	 if {Int.isNat Inversa} then
-	    InversaModular = Inversa
-	 else
-	    InversaModular = Inversa + Valor2
-	 end
-	 
-      end
-      
-      meth calcularPotenciaModulo(A N ?Resultado)
-	 Resultado = {ModExp A N}
-      end
-
-      meth verificarCoprimalidad(Valor1 Valor2 ?EsPrimoRelativo)
-	 Mcd in
-	 Mcd = {self calcularFuncionDeEuclides(Valor1 Valor2 $)}
-	 if Mcd == 1 then
-	    EsPrimoRelativo = true
-	 else
-	    EsPrimoRelativo = false
-	 end
-	 
-      end
-
-      meth generarNumeroPrimo(Tamano ?Primo)
+    meth generarNumeroPrimo(Tamano ?Primo)
   
-	 EsPrimo = {NewCell true}
-	 Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
-	 PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
-	 
-      in
-	 
-	 Aleatorio := {Send PuertoGenNumero generarNumero(Tamano AleatorioAGenerar $)}
-	 EsPrimo := {self realizarTestDeFermat({StringToInt @Aleatorio} $)}
+		EsPrimo = {NewCell true} Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
+	    in
+		 
+		Aleatorio := {ComponenteMatematico.generacionNumeros generarNumero(Tamano AleatorioAGenerar $)}
+		EsPrimo := {self realizarTestDeFermat({StringToInt @Aleatorio} $)}
 
-	 if @EsPrimo == true then
-	    Primo = {StringToInt @Aleatorio}
-	 else
-	    Primo = {self generarNumeroPrimo(Tamano $)}
-	 end
-	 	  
-      end
+		if @EsPrimo == true then
+		   Primo = {StringToInt @Aleatorio}
+		else
+		   Primo = {self generarNumeroPrimo(Tamano $)}
+		end
+    end
 
-      meth modulo(Operador1 Operador2 ?Modulo)
-	 Modulo = Operador1 mod Operador2
-      end
+    meth inversaAditivaModular(Sumando ?Sum)
+    	if Sumando == 0 then Sum = 0
+     	else Sum = 65536 - Sumando
+     	end
+    end
+    
+    %Convierte un string binario a decimal
+    meth toInt(Binario Length ?Int)
+     	Int = {BitStringToInt Length Binario}
+    end
 
-      meth potencia(Operador Potencia ?Resultado)
-	 Resultado = {Pow Operador Potencia}
-      end
+    meth modulo(Operador1 Operador2 ?Modulo)
+		Modulo = Operador1 mod Operador2
+    end
 
-      meth exponenciacionModular(Base Potencia Modulo ?Resultado)
-	 	Resultado = {ExponenciacionModulo Base Potencia Modulo}
-      end
+    meth CalcularPotenciaModulo(Valor1 Valor2 ?Resultado)
+		Resultado = {ModExp Valor1 Valor2}
+    end
 
-      %Convierte un string binario a decimal
-      meth toInt(Binario Length ?Int)
-      	Int = {BitStringToInt Length Binario}
-      end
+    
+    meth potencia(Operador Potencia ?Resultado)
+		Resultado = {Pow Operador Potencia}
+    end
 
-      meth inversaMultiplicativa(Input ?Inversa)
-      	%{Euclide Valor1 Valor2 Inv _}
-      	%Inversa = Inv
-      	Inversa = 1 div Input
-      end
-
-      meth inversaAditiva(Input ?Inversa)
-      	Inversa = Input * ~1
-      end
    end
 
 
@@ -219,32 +200,3 @@ define
 	end
 
 end
-
-	 
-
-
-
-
-
-
-   
-%    proc {GenAleatorio ?Al}
-%       PuertoGenNumero
-%       Flujo
-%       RangoInferior = 1
-%       RangoSuperior = 10
-	 
-%    in
-
-%       thread
-% 	 {GestorNumeros.gestorNumero Flujo PuertoGenNumero}
-%       end
-
-  
-%       {Send PuertoGenNumero  generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior Al)}
-%       {Browser.browse 'Al' Al}
-   
-%    end
-
-
-% La suma en módulo 2^16 implica que el resultado de la suma no puede ser mayor a 2^16 (65536). Esta restricción no será tenida en cuenta ya que los resultados que obtendremos no serán mayores a dicho valor, es decir usaremos enteros de 16 bits y realizaremos sumas normales

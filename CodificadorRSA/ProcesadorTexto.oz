@@ -1,6 +1,4 @@
 functor
-import
-%Browser
 export
    procesadorTexto:ProcesadorTexto
 define
@@ -11,7 +9,7 @@ define
       end
 
       meth textToASCIICode(Texto ?AsciiCode)
-         AsciiCode = {TextToAscii Texto}
+         AsciiCode = {TextToAscii Texto 3}
       end
 
       meth addZerosToCompleteBloqueSize( Bloque TamanoBloque ?BloqueRightSize)
@@ -36,11 +34,11 @@ define
    %   end
    %end
 
-   fun{TextToAscii Texto}
+   fun{TextToAscii Texto SizeText}
       
       case
-         Texto of H|nil then {AddLeadingZeros {IntToString H} 3}
-      [] H|T then {Append {AddLeadingZeros {IntToString H} 3} {TextToAscii T}}
+         Texto of H|nil then {AddLeadingZeros {IntToString H} SizeText}
+      [] H|T then {Append {AddLeadingZeros {IntToString H} SizeText} {TextToAscii T 3}}
         
       end
    end
