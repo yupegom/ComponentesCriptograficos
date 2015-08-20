@@ -47,7 +47,6 @@ define
          Subclaves = {LlaveIdea subclaves($)}
          ResDecodificacion = {self DecodificarBloques(TextoADecodificar Subclaves $)}
          TextoObtenido = {New TextoDecodificado.textoDecodificado init({@procesadorTexto asciiTextToClearText(ResDecodificacion $)})}
-         %TextoObtenido ={New TextoDecodificado.textoDecodificado init("hola")}
       end
 
       meth CodificarBloques(TextoACodificar Subclaves TamanoBloque ?TextoCodificado)
@@ -68,17 +67,17 @@ define
          end in TextoCodificado = {CodificarBloquesAux TextoACodificar ""}
       end
 
-      meth DecodificarBloques(TextoACodificar Subclaves ?TextoCodificado)
-         StringSplit = {StringPlus.split TextoACodificar "-"}
-         fun{CodificarBloquesAux TextToEncrypt ResultadoCodificacion}
+      meth DecodificarBloques(TextoADecodificar Subclaves ?TextoDecodificado)
+         StringSplit = {StringPlus.split TextoADecodificar "-"}
+         fun{DecodificarBloquesAux TextToDecrypt ResultadoDecodificacion}
             case 
-               TextToEncrypt of H|nil then {List.append  ResultadoCodificacion {AppendZero {self CodificarBloque( H Subclaves $ ) } H }}
-               [] H|T then {CodificarBloquesAux T {List.append ResultadoCodificacion {AppendZero {self CodificarBloque( H Subclaves $ ) } H}} }
+               TextToDecrypt of H|nil then {List.append  ResultadoDecodificacion {AppendZero {self CodificarBloque( H Subclaves $ ) } H }}
+               [] H|T then {DecodificarBloquesAux T {List.append ResultadoDecodificacion {AppendZero {self CodificarBloque( H Subclaves $ ) } H}} }
             end
                
          end
          in
-         TextoCodificado = {CodificarBloquesAux StringSplit ""}
+         TextoDecodificado = {DecodificarBloquesAux StringSplit ""}
       end
 
    end
