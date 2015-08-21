@@ -36,4 +36,5 @@ ozc -c CodificadorIDEA/TextoDecodificado.oz -o CodificadorIDEA/TextoDecodificado
 ozc -c CodificadorIDEA/ProcesadorTexto.oz -o CodificadorIDEA/ProcesadorTexto.ozf
 ozc -c CodificadorIDEA/OperacionesMatematicas.oz -o CodificadorIDEA/OperacionesMatematicas.ozf
 ozc -c CodificadorIDEA/IDEA.oz -o CodificadorIDEA/IDEA.ozf
+ozc -c LibreriaCriptografica/LibreriaCriptografica.oz -o LibreriaCriptografica/LibreriaCriptografica.ozf
 ozc -x Interfaz/Gui/GUI.oz -o Interfaz/Gui/GUI.exe

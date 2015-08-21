@@ -1,44 +1,73 @@
 functor
 import
-   Componente at 'file:../../AbstraccionComponente/Componente.ozf'
-   Browser
-   %GeneradorClave at 'file:../../GeneradorClave/GeneradorClave.ozf'
-   ClavePublicaRSA at 'file:../../GeneradorClave/ClavePublicaRSA.ozf'
+   GeneradorClave at 'file:../../GeneradorClave/GeneradorClave.ozf'
+   GestorArchivos at 'file:../../GestorArchivo/GestorArchivo.ozf'
+   CodificadorRSA at 'file:../../CodificadorRSA/CodificadorRSA.ozf'
+   CodificadorIDEA at 'file:../../CodificadorIDEA/CodificadorIDEA.ozf'
+   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
 export
-   generarLlaves:IGenerarLlaves
-   codificar:ICodificar
+   interfacesDeSistema:LibreriaCriptografica
 define
-   proc {IGenerarLlaves R2 Flujo3 PuertoGeneracionLlaves}
+  %Flujos y puertos para el alambrado de componentes
+   FlujoGeneradorClaves PuertoGeneradorClaves Flujo PuertoOperacionesArchivo PuertoCodificacionRSA PuertoCodificacionIDEA FlujoCodificacion FlujoCodificacionIDEA FlujoOpMatematicas PuertoOpMatematicas
 
-      {Componente.nuevoPuertoReq
-       proc{$Msg}
-	  
-	  try
-	     {LlamarServicio R2 Msg}
-	  catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pueden generar las llaves.' } end
-       end Flujo3 PuertoGeneracionLlaves}
+   proc {AlambrarComponentes} 
+      thread {GestorArchivos.operacionesArchivo Flujo PuertoOperacionesArchivo} end
+      thread {ComponenteMatematico.interfazMatematicaAvanzada FlujoOpMatematicas PuertoOpMatematicas} end
+      thread {GeneradorClave.generadorClave PuertoOpMatematicas PuertoOperacionesArchivo FlujoGeneradorClaves PuertoGeneradorClaves} end
+      thread {CodificadorRSA.codificadorRSA PuertoOpMatematicas FlujoCodificacion PuertoCodificacionRSA} end
+      thread {CodificadorIDEA.codificadorIDEA PuertoOpMatematicas PuertoGeneradorClaves FlujoCodificacionIDEA PuertoCodificacionIDEA} end
+      
    end
 
-   proc {ICodificar PuertoCodificacion Flujo PuertoLibCodificacion}
+   class LibreriaCriptografica
 
-      {Componente.nuevoPuertoReq
-       proc{$Msg} Clave in
-	  case Msg of codificar(Texto E N ?TextCodificado) then
-	     try
-		{Browser.browse Msg}
-    Clave = {New ClavePublicaRSA.clavePublicaRSA init(E N)}
-		{LlamarServicio PuertoCodificacion codificar(Texto Clave ?TextCodificado)}
-	     catch X then {Browser.browse 'Se presentó la excepción ' #X# ' No se pueden generar las llaves.' } end
-	  
-	  [] _ then skip
-	  end
-       end Flujo PuertoLibCodificacion}
-   end
+      meth init
+         {AlambrarComponentes}
+      end
 
-   proc {LlamarServicio Puerto Msg}
-      {Componente.proveerServ Puerto Msg}
+      meth almacenarArchivo(Contenido Ruta)
+         {Send PuertoOperacionesArchivo almacenarArchivo(Contenido Ruta)}
+      end
+
+      meth generarLlave(TipoLlaveAGenerar)
+         {Send PuertoGeneradorClaves generarLlave(TipoLlaveAGenerar)}
+      end
+
+      meth cargarArchivo(RutaArchivo ?Contenido)
+         Archivo in
+         Archivo = {Send PuertoOperacionesArchivo cargarArchivo(RutaArchivo $) } 
+         Contenido = {Archivo contenido($)}
+      end
+
+      meth codificar(TipoCodificacion RutaClave TextoACodificar ?TextoCodificado)
+         Clave E N Zs in
+         Clave = {self cargarArchivo(RutaClave $) }
+         if TipoCodificacion == 'RSA' then
+            {List.takeDropWhile Clave IsEnter N Zs}
+            {List.subtract Zs 10 E}
+            {Send PuertoCodificacionRSA codificar(TextoACodificar {String.toInt N} {String.toInt E} ({List.length N}-1) TextoCodificado)}
+         else
+            {Send PuertoCodificacionIDEA codificar(TextoACodificar Clave ?TextoCodificado)}
+         end
+      end
+
+      meth decodificar(TipoDecodificacion RutaClave TextoADecodificar ?TextoDecodificado)
+         Clave N D Zs in
+         Clave = {self cargarArchivo(RutaClave $) }
+         if TipoDecodificacion == 'RSA' then
+            {List.takeDropWhile Clave IsEnter N Zs}
+            {List.subtract Zs 10 D}
+            {Send PuertoCodificacionRSA decodificar(TextoADecodificar {String.toInt N} {String.toInt D} ({List.length N}) TextoDecodificado)}
+         else
+            {Send PuertoCodificacionIDEA decodificar(TextoADecodificar Clave TextoDecodificado)}
+         end
+      end
    end
    
+   fun {IsEnter A}
+      A \= 10
+   end
 end
 
       
