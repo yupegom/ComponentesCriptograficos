@@ -13,7 +13,7 @@ define
     proc {ICodificadorRSA PuertoOperacionesMatematicas Flujo PuertoCodificador}
     	PuertoOpMatematicas = PuertoOperacionesMatematicas
     	{Componente.nuevoPuertoReq
-    	proc{$Mensaje} CodificadorRSA = {New RSA.codificador init(PuertoOpMatematicas)} Clave in
+    	proc{$Mensaje} CodificadorRSA = {New RSA.codificador init} Clave in
 		   	case Mensaje of codificar(TextoACodificar N E TamanoBloque ?TextoCodificado) then
 		   		try
 					Clave = {New ClavePublicaRSA.clavePublicaRSA init(E N)}

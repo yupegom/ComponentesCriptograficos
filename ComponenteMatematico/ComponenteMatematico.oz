@@ -6,8 +6,7 @@ import
 export
    interfazMatematicaAvanzada:IMatematicaAvanzada
    interfazMatematicaBasica:IMatematicaBasica
-   generacionNumeros: ServicioRequGeneracionNumeros
-define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init} PuertoGenNumeros
+define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init}
    proc {IMatematicaBasica Flujo PuertoOpBasicas}
 
       {Componente.nuevoPuertoReq
@@ -19,8 +18,7 @@ define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init} PuertoGenNume
        end Flujo PuertoOpBasicas}
    end
 
-   proc {IMatematicaAvanzada PuertoGeneradorNumeros Flujo2 PuertoOpAvanzadas}
-      PuertoGenNumeros = PuertoGeneradorNumeros
+   proc {IMatematicaAvanzada Flujo2 PuertoOpAvanzadas}
       {Componente.nuevoPuertoReq
        proc{$Mensaje}
 	  
@@ -32,8 +30,4 @@ define Servicio = {New FuncionesAvanzadas.matematicaAvanzada init} PuertoGenNume
 
        end Flujo2 PuertoOpAvanzadas}
    end
-
-  proc {ServicioRequGeneracionNumeros Msg}
-       {Componente.proveerServ PuertoGenNumeros Msg}
-  end
 end

@@ -1,22 +1,26 @@
 functor
 import
-   GeneradorClave 
+   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
 export servicioGeneradorNumeros:GeneradorNumerosService
-define 	 
+define    
    class GeneradorNumerosService
 
       meth init
-	 skip
+    skip
       end
 
       meth generarNumeroPrimo(Tamano ?ProbablePrimo)
-   	 ProbablePrimo = {GeneradorClave.generadorNumeros generarNumeroPrimo(Tamano $)}
+       PuertoGeneradorNumeros = {GestorNumeros.gestorNumero _ $}
+         in
+       ProbablePrimo = {Send PuertoGeneradorNumeros generarNumeroPrimo(Tamano $)}
       
       end
 
 
       meth generarAleatorioDentroDeRango(RangoInf RangoSuperior ?Aleatorio)
-         Aleatorio = {GeneradorClave.generadorNumeros generarAleatorioDentroDeRangoEspecifico(RangoInf RangoSuperior $)}
+         PuertoGeneradorNumeros = {GestorNumeros.gestorNumero _ $}
+         in
+         Aleatorio = {Send PuertoGeneradorNumeros generarAleatorioDentroDeRangoEspecifico(RangoInf RangoSuperior $)}
       end
    end
 end

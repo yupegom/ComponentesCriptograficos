@@ -3,7 +3,8 @@ import
    ProcesadorTexto
    OperacionesMatematicas
    TextoCodificado
-   TextoDecodificado 
+   TextoDecodificado
+   Browser
 export 
    codificador:RSA
 define 	 
@@ -11,8 +12,8 @@ define
 
       attr opMatematicas procesadorTexto
 
-      meth init(PuertoOperacionesMatematicas)
-   	   opMatematicas := {New OperacionesMatematicas.opMatService init(PuertoOperacionesMatematicas)}
+      meth init
+   	   opMatematicas := {New OperacionesMatematicas.opMatService init}
          procesadorTexto := {New ProcesadorTexto.procesadorTexto init}
       end
 

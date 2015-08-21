@@ -5,6 +5,8 @@ import
    ClavePrivadaRSA
    ClavePublicaRSA
    ClaveIDEA
+   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
+   ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
    OperacionesMatematicasService
    GeneradorNumerosService
    IntBitSupport at 'file:../../BitOperations/IntWithBitSupport.ozf'
@@ -76,9 +78,11 @@ define
 
     meth ObtenerValorDeE(PhiN ?E)
 		PrimosRelativos	Eaux = {NewCell 0}
+		PuertoGeneradorNumeros = {GestorNumeros.gestorNumero _ $}
+	 	PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
 		in
-		Eaux := {@operacionesService generarAleatorioDentroDeRango(1 PhiN $)}
-		PrimosRelativos = {@operacionesService verificarCoprimalidad(@Eaux PhiN $)}
+		Eaux := {Send PuertoGeneradorNumeros generarAleatorioDentroDeRangoEspecifico(1 PhiN $)}
+		PrimosRelativos = {Send PuertoOpMatematicas verificarCoprimalidad(@Eaux PhiN $)}
 		if PrimosRelativos == true then
 		   E = @Eaux
 		else
@@ -91,7 +95,10 @@ define
 	end
 
     meth ObtenerValorDeD(E PhiN ?D)
-		D = {@operacionesService calcularInversaModular(E PhiN $)}
+		PuertoOpMatematicas = {ComponenteMatematico.interfazMatematicaAvanzada _ $}
+      in
+	 
+	 D = {Send PuertoOpMatematicas calcularInversaModular(E PhiN $)}
     end
       
              

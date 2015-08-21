@@ -1,6 +1,6 @@
 functor
 import
-   ComponenteMatematico
+   GestorNumeros at 'file:../../GestorNumeros/GestorNumeros.ozf'
 export
    matematicaAvanzada:FuncionesAvanzadas
 define
@@ -73,10 +73,11 @@ define
 		RangoInferior = 1 RangoSuperior = Valor - 1
 		Aleatorio={NewCell 0} K = 40 MCD = {NewCell 0} Res = {NewCell 0}
 		EsPrimo = {NewCell true}
+		PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
     in
 		for I in 1..K break:B do
 	   
-	    	Aleatorio := {ComponenteMatematico.generacionNumeros generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
+	    	Aleatorio := {Send PuertoGenNumero generarAleatorioDentroDeRangoEspecifico(RangoInferior RangoSuperior $)}
 	    	MCD := {self calcularFuncionDeEuclides(@Aleatorio Valor $)}
 
 	    	if @MCD \= 1 then
@@ -107,9 +108,10 @@ define
     meth generarNumeroPrimo(Tamano ?Primo)
   
 		EsPrimo = {NewCell true} Aleatorio={NewCell ""} AleatorioAGenerar = {NewCell ""}
+		PuertoGenNumero = {GestorNumeros.gestorNumero _ $}
 	    in
 		 
-		Aleatorio := {ComponenteMatematico.generacionNumeros generarNumero(Tamano AleatorioAGenerar $)}
+		Aleatorio := {Send PuertoGenNumero generarNumero(Tamano AleatorioAGenerar $)}
 		EsPrimo := {self realizarTestDeFermat({StringToInt @Aleatorio} $)}
 
 		if @EsPrimo == true then
