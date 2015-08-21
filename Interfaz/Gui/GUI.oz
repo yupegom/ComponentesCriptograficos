@@ -103,9 +103,9 @@ define
       IsCodificarRSA in
       {HandleSelectionCod get(1:IsCodificarRSA)}
       if(IsCodificarRSA) then 
-         {CodificarRSA}
+         {Codificar 'RSA' ".rsak"}
       else
-         {CodificarIDEA}
+         {Codificar 'IDEA' ".ideak"}
       end
    end
 
@@ -113,9 +113,9 @@ define
       IsDecodificarRSA in
       {HandleSelectionCod get(1:IsDecodificarRSA)}
       if(IsDecodificarRSA) then 
-         {DecodificarRSA}
+         {Decodificar 'RSA' ".rsak"}
       else
-         {DecodificarIDEA}
+         {Decodificar 'IDEA' ".ideak"}
       end
    end
 
@@ -123,55 +123,28 @@ define
       A \= 10
    end
 
-   proc{CodificarIDEA}
-      RutaClave TipoCodificacionAGenerar = 'IDEA'
+   proc{Decodificar TipoDecodificacionAGenerar ExtClave}
+      RutaClave
       in
-         RutaClave = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
+         RutaClave =  {RutaArchivoACargar ExtClave "Archivo de clave" ExtClave}
       if RutaClave \= nil then
-         {Codificar TipoCodificacionAGenerar RutaClave}  
-      end
-   end
-
-   proc{CodificarRSA}
-      RutaClave TipoCodificacionAGenerar = 'RSA'
-      in
-         RutaClave = {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"}
-      if RutaClave \= nil then
-         {Codificar TipoCodificacionAGenerar RutaClave} 
-      end
-   end
-
-   proc{DecodificarIDEA}
-      RutaClave TipoDecodificacionAGenerar = 'IDEA'
-      in
-         RutaClave =  {RutaArchivoACargar ".ideak" "Archivo de clave" "ideak"}
-      if RutaClave \= nil then 
-         {Decodificar TipoDecodificacionAGenerar RutaClave}
-      end
-   end
-
-
-   proc{DecodificarRSA}
-      RutaClave TipoDecodificacionAGenerar= 'RSA'
-      in
-         RutaClave =  {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"} 
-      if RutaClave \= nil then
-         {Decodificar TipoDecodificacionAGenerar RutaClave}
-      end
-   end
-
-   proc{Decodificar TipoDecodificacionAGenerar RutaClave}
-      ResultadoDecodificacion TextoADecodificar in
+         ResultadoDecodificacion TextoADecodificar in
          TextoADecodificar = {TextHandle get($)}
          ResultadoDecodificacion = {InterfaceController decodificar(TipoDecodificacionAGenerar RutaClave TextoADecodificar $)}
-         {TextHandle set(ResultadoDecodificacion)}  
+         {TextHandle set(ResultadoDecodificacion)} 
+      end 
    end
 
-   proc{Codificar TipoCodificacionAGenerar RutaClave}
-      ResultadoCodificacion TextoACodificar in
+   proc{Codificar TipoCodificacionAGenerar ExtClave}
+      RutaClave
+      in
+         RutaClave =  {RutaArchivoACargar ExtClave "Archivo de clave" ExtClave}
+      if RutaClave \= nil then 
+         ResultadoCodificacion TextoACodificar in
          TextoACodificar = {TextHandle get($)}
          ResultadoCodificacion = {InterfaceController codificar(TipoCodificacionAGenerar RutaClave TextoACodificar $)}
-         {TextHandle set(ResultadoCodificacion)} 
+         {TextHandle set(ResultadoCodificacion)}
+      end
    end
 
    proc{RutaArchivoACargar Tipo Desc DefaultExtension ?RutaArchivo} 
