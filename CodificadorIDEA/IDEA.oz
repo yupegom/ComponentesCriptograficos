@@ -41,7 +41,6 @@ define
          TextoObtenido = ResCodificacion %{@procesadorTexto addLeadingZeros(ResCodificacion 16 $)}
       end
 
-      %Al decodificar lo que cambia son las claves generadas a partir de la clave inicial, el proceso es igual al de codificación
       meth decodificar(TextoADecodificar LlaveIdea ?TextoObtenido)
          ResDecodificacion Subclaves in
          Subclaves = {LlaveIdea subclaves($)}

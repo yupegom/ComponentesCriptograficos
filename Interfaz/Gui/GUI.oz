@@ -70,7 +70,7 @@ define
 
 
    local InterfaceController = {New GUI init} 
-   TextHandle Handle in
+   TextHandle Handle HandleSelectionCod in
 
    proc{AlmacenarArchivo}
       RutaArchivo={QTk.dialogbox save($)} Contenido
@@ -99,47 +99,79 @@ define
       {TextHandle set("Clave Generada correctamente!")}
    end
 
+   proc{SelCodificar}
+      IsCodificarRSA in
+      {HandleSelectionCod get(1:IsCodificarRSA)}
+      if(IsCodificarRSA) then 
+         {CodificarRSA}
+      else
+         {CodificarIDEA}
+      end
+   end
+
+   proc{SelDecodificar}
+      IsDecodificarRSA in
+      {HandleSelectionCod get(1:IsDecodificarRSA)}
+      if(IsDecodificarRSA) then 
+         {DecodificarRSA}
+      else
+         {DecodificarIDEA}
+      end
+   end
+
    fun {IsEnter A}
       A \= 10
    end
 
-   proc{CodificarTexto}
-      GenerarClaveRSA TipoCodificacionAGenerar ResultadoCodificacion TextoACodificar
-      RutaClave
+   proc{CodificarIDEA}
+      RutaClave TipoCodificacionAGenerar = 'IDEA'
       in
-      {Handle get(1:GenerarClaveRSA)}
-      if(GenerarClaveRSA) then 
-         RutaClave = {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"}
-         TipoCodificacionAGenerar = 'RSA'
-      else 
-         TipoCodificacionAGenerar = 'IDEA'
          RutaClave = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
-         
-      end
       if RutaClave \= nil then
-         TextoACodificar = {TextHandle get($)}
-         ResultadoCodificacion = {InterfaceController codificar(TipoCodificacionAGenerar RutaClave TextoACodificar $)}
-         {TextHandle set(ResultadoCodificacion)}  
+         {Codificar TipoCodificacionAGenerar RutaClave}  
       end
    end
 
-   proc{DecodificarTexto}
-      GenerarClaveRSA TipoDecodificacionAGenerar ResultadoDecodificacion TextoADecodificar
-      RutaClave
+   proc{CodificarRSA}
+      RutaClave TipoCodificacionAGenerar = 'RSA'
       in
-      {Handle get(1:GenerarClaveRSA)}
-      if(GenerarClaveRSA) then 
-         RutaClave =  {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"} 
-         TipoDecodificacionAGenerar= 'RSA'
-      else
-         TipoDecodificacionAGenerar = 'IDEA'
-         RutaClave = {RutaArchivoACargar ".ideak" "Clave IDEA para codificar" "ideak"}
-      end
+         RutaClave = {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"}
       if RutaClave \= nil then
+         {Codificar TipoCodificacionAGenerar RutaClave} 
+      end
+   end
+
+   proc{DecodificarIDEA}
+      RutaClave TipoDecodificacionAGenerar = 'IDEA'
+      in
+         RutaClave =  {RutaArchivoACargar ".ideak" "Archivo de clave" "ideak"}
+      if RutaClave \= nil then 
+         {Decodificar TipoDecodificacionAGenerar RutaClave}
+      end
+   end
+
+
+   proc{DecodificarRSA}
+      RutaClave TipoDecodificacionAGenerar= 'RSA'
+      in
+         RutaClave =  {RutaArchivoACargar ".rsak" "Archivo de clave" "rsak"} 
+      if RutaClave \= nil then
+         {Decodificar TipoDecodificacionAGenerar RutaClave}
+      end
+   end
+
+   proc{Decodificar TipoDecodificacionAGenerar RutaClave}
+      ResultadoDecodificacion TextoADecodificar in
          TextoADecodificar = {TextHandle get($)}
          ResultadoDecodificacion = {InterfaceController decodificar(TipoDecodificacionAGenerar RutaClave TextoADecodificar $)}
          {TextHandle set(ResultadoDecodificacion)}  
-      end
+   end
+
+   proc{Codificar TipoCodificacionAGenerar RutaClave}
+      ResultadoCodificacion TextoACodificar in
+         TextoACodificar = {TextHandle get($)}
+         ResultadoCodificacion = {InterfaceController codificar(TipoCodificacionAGenerar RutaClave TextoACodificar $)}
+         {TextHandle set(ResultadoCodificacion)} 
    end
 
    proc{RutaArchivoACargar Tipo Desc DefaultExtension ?RutaArchivo} 
@@ -159,23 +191,37 @@ define
    Toolbar=lr(glue:we
          tbbutton(text:"Cargar" glue:w action:CargarArchivo)
          tbbutton(text:"Guardar" glue:w action:AlmacenarArchivo)
-         tbbutton(text:"Codificar" glue:w action:CodificarTexto)
-         tbbutton(text:"Decodificar" glue:w action:DecodificarTexto)
          tbbutton(text:"Cerrar" glue:w action:CerrarAplicacion))
 
-   TipoLlaves=td(radiobutton(text:'RSA' 
+   TipoLlaves=lr(
+            tbbutton(text:"Generar Claves"
+                 glue:w  action:GenerarLlaves   )
+            td(
+              radiobutton(text:'RSA' 
               init:true 
               group:radio1 handle:Handle )
        radiobutton(text:"IDEA"
-              group:radio1) )
+              group:radio1) ))
+
+   OpcionesCodificacion=lr(
+            td(tbbutton(text:"Codificar"
+                 glue:w  action:SelCodificar   )
+               tbbutton(text:"Decodificar"
+                 glue:w  action:SelDecodificar   )
+                 )
+            td(
+              radiobutton(text:'RSA' 
+              init:true 
+              group:radio2 handle:HandleSelectionCod )
+       radiobutton(text:"IDEA"
+              group:radio2) ))
  
    
  
    Window={QTk.build td(Toolbar
          text(glue:nswe handle:TextHandle bg:white tdscrollbar:true)
          lr( 
-             tbbutton(text:"Generar Claves"
-                 glue:w  action:GenerarLlaves   )
+             OpcionesCodificacion
              TipoLlaves)
              )}
    
