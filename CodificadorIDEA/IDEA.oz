@@ -8,8 +8,7 @@ import
    StringPlus at 'x-oz://system/String.ozf'
 export 
    codificador:CodificadorIDEA
-define 	 
-%orientado a entregar esructuras de datos
+define
    class CodificadorIDEA
 
       attr opMatematicas textoCodificado textoDecodificado procesadorTexto

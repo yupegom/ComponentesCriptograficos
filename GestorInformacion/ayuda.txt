@@ -1,0 +1,19 @@
+Codificación:
+
+1. Generación de llaves
+	Antes de realizar la codificación debe genera las llaves de acuerdo al algoritmo que desea utilizar. En la parte inferior del sistema se encuentra la opción "Generar Llaves" y a su derecha las opciones "RSA" e "IDEA". Seleccione una de estas dos opciones y de click en "Generar Llaves". En esta versión las llaves se generan por defecto en el folder "/ComponentesCriptograficos/GeneradorClave".
+
+2. Con RSA
+	Para codificar con RSA, de click en la opción "Cargar" del menu superior, y seleccione el archivo (txt) que desea codificar, este aparecerá en la caja de texto del aplicativo. En la parte inferior de la pantalla está la opción "Codificar" y a su derecha las opciones "RSA" e "IDEA". Seleccione "RSA" y de click en "Codificar". Se abrirá el gestor de archivos de su sistema operativo. Diríjase al folder "/ComponentesCriptograficos/GeneradorClave" y seleccione el archivo "ClavePublicaRSA.rsak" (debe haber realizado el paso 1). En pantalla aparecerá la codificación del archivo previamente cargado. (Puede codificar este manual si lo desea :) )
+
+2. Con IDEA
+	De la misma manera debe primero cargar el archivo que desa codificar. En la parte inferior seleccione "IDEA" para codificar, aparecerá el gestor de archivos de su sistema operativo, diríjase al folder "/ComponentesCriptograficos/GeneradorClave" y seleccione el archivo "ClaveIDEA.ideak". En la pantalla aparecerá la respectiva codificación.
+
+Decodificación:
+
+1. Debe haber generado las claves tal como se explica en el punto 1 de la sección "Codificación"
+
+2. Con RSA
+	En la parte inferior de la pantalla se encuetra la opción "Decodificar". A su derecha puede seleccionar "RSA" o "IDEA". En este caso sellecciones "RSA" para decodificar, se abrirá el gestor de archivos del sistema operativo. Diríjase al folder "GeneradorClave" y seleccione el archivo "ClavePrivadaRSA.rsak". En la pantalla aparecerá el archivo decodificado.
+3. Con IDEA
+	Seleccione "IDEA" para decodificar, diríjase al folder "/ComponentesCriptograficos/GeneradorClave" y seleccione el archivo "ClaveIDEA.ideak". En la pantalla aparecerá el archivo decodificado.

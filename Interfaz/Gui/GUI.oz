@@ -3,7 +3,6 @@ import
    QTk at 'x-oz://system/wp/QTk.ozf'
    LibreriaCriptografica at 'file:../../LibreriaCriptografica/LibreriaCriptografica.ozf'
    Application(exit)
-   %Browser
    
 define
 
@@ -27,6 +26,27 @@ define
          Contenido = {InterfaceController cargarArchivo(RutaArchivo $)}  
         {TextHandle set( Contenido )}
       end
+   end
+
+   proc{CargarInformacionRSA}
+      Contenido
+   in  
+        Contenido = {InterfaceController cargarInformacionRSA($)}  
+        {TextHandle set( Contenido )}
+   end
+
+   proc{CargarInformacionIDEA}
+      Contenido
+   in  
+        Contenido = {InterfaceController cargarInformacionIDEA($)}  
+        {TextHandle set( Contenido )}
+   end
+
+   proc{Ayuda}
+      Contenido
+   in  
+        Contenido = {InterfaceController cargarAyuda($)}  
+        {TextHandle set( Contenido )}
    end
 
    proc{GenerarLlaves}
@@ -98,6 +118,9 @@ define
    Toolbar=lr(glue:we
          tbbutton(text:"Cargar" glue:w action:CargarArchivo)
          tbbutton(text:"Guardar" glue:w action:AlmacenarArchivo)
+         tbbutton(text:"RSA Funcionamiento" glue:w action:CargarInformacionRSA)
+         tbbutton(text:"IDEA Funcionamiento" glue:w action:CargarInformacionIDEA)
+         tbbutton(text:"Ayuda" glue:w action:Ayuda)
          tbbutton(text:"Cerrar" glue:w action:CerrarAplicacion))
 
    TipoLlaves=lr(

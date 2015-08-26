@@ -5,14 +5,16 @@ import
    CodificadorRSA at 'file:../../CodificadorRSA/CodificadorRSA.ozf'
    CodificadorIDEA at 'file:../../CodificadorIDEA/CodificadorIDEA.ozf'
    ComponenteMatematico at 'file:../../ComponenteMatematico/ComponenteMatematico.ozf'
+   GestorInformacion at 'file:../../GestorInformacion/GestorInformacion.ozf'
 export
    interfacesDeSistema:LibreriaCriptografica
 define
   %Flujos y puertos para el alambrado de componentes
-   FlujoGeneradorClaves PuertoGeneradorClaves Flujo PuertoOperacionesArchivo PuertoCodificacionRSA PuertoCodificacionIDEA FlujoCodificacion FlujoCodificacionIDEA FlujoOpMatematicas PuertoOpMatematicas
+   FlujoGeneradorClaves PuertoGeneradorClaves Flujo PuertoOperacionesArchivo PuertoCodificacionRSA PuertoCodificacionIDEA FlujoCodificacion FlujoCodificacionIDEA FlujoOpMatematicas PuertoOpMatematicas FlujoInformacion PuertoInformacion
 
    proc {AlambrarComponentes} 
       thread {GestorArchivos.operacionesArchivo Flujo PuertoOperacionesArchivo} end
+      thread {GestorInformacion.infoAlgoritmo PuertoOperacionesArchivo FlujoInformacion PuertoInformacion} end
       thread {ComponenteMatematico.interfazMatematicaAvanzada FlujoOpMatematicas PuertoOpMatematicas} end
       thread {GeneradorClave.generadorClave PuertoOpMatematicas PuertoOperacionesArchivo FlujoGeneradorClaves PuertoGeneradorClaves} end
       thread {CodificadorRSA.codificadorRSA PuertoOpMatematicas FlujoCodificacion PuertoCodificacionRSA} end
@@ -38,6 +40,18 @@ define
          Archivo in
          Archivo = {Send PuertoOperacionesArchivo cargarArchivo(RutaArchivo $) } 
          Contenido = {Archivo contenido($)}
+      end
+
+      meth cargarInformacionRSA(?Contenido)
+         {Send PuertoInformacion cargarInformacion('RSA' Contenido)}
+      end
+
+      meth cargarInformacionIDEA(?Contenido)
+         {Send PuertoInformacion cargarInformacion('IDEA' Contenido)}
+      end
+
+      meth cargarAyuda(?Contenido)
+         {Send PuertoInformacion cargarAyuda(Contenido)}
       end
 
       meth codificar(TipoCodificacion RutaClave TextoACodificar ?TextoCodificado)

@@ -1,0 +1,22 @@
+En criptografía, International Data Encryption Algorithm o IDEA (del inglés, algoritmo internacional de cifrado de datos) es un cifrador por bloques diseñado por Xuejia Lai y James L. Massey de la Escuela Politécnica Federal de Zúrich y descrito por primera vez en 1991. Fue un algoritmo propuesto como reemplazo del DES (Data Encryption Standard) . IDEA fue una revisión menor de PES (Proposed Encryption Standard, del inglés Estándar de Cifrado Propuesto), un algoritmo de cifrado anterior. Originalmente IDEA había sido llamado IPES (Improved PES, del inglés PES Mejorado).
+
+IDEA fue diseñado en contrato con la Fundación Hasler, la cual se hizo parte de Ascom-Tech AG. IDEA es libre para uso no comercial, aunque fue patentado y sus patentes vencieron en 2010 y 2011. El nombre "IDEA" es una marca registrada y está licenciado mundialmente por MediaCrypt.
+
+IDEA fue utilizado como el cifrador simétrico en las primeras versiones de PGP (PGP v2.0) y se lo incorporó luego de que el cifrador original usado en la v1.0 ("Bass-O-Matic") se demostró insegura. Es un algoritmo opcional en OpenPGP.
+
+Funcionamiento:
+
+IDEA opera con bloques de 64 bits usando una clave de 128 bits y consiste de ocho transformaciones idénticas (cada una llamada un ronda) y una transformación de salida (llamada media ronda). El proceso para cifrar y descifrar es similar. Gran parte de la seguridad de IDEA deriva del intercalado de operaciones de distintos grupos — adición y multiplicación modular y O-exclusivo (XOR) bit a bit — que son algebraicamente "incompatibles" en cierta forma.
+
+IDEA utiliza tres operaciones en su proceso con las cuales logra la confusión, se realizan con grupos de 16 bits y son:
+
+Operación O-exclusiva (XOR) bit a bit (indicada con un ? azul)
+Suma módulo 216 (indicada con un boxplus verde)
+Multiplicación módulo 216+1, donde la palabra nula (0x0000) se interpreta como 216 (indicada con un odot rojo)
+(216 = 65536; 216+1 = 65537, que es primo)
+
+Después de realizar 8 rondas completas viene una 'media ronda', cuyo resultado se obtiene como indica la siguiente figura:
+
+Más info:
+
+Tomado de: https://es.wikipedia.org/wiki/International_Data_Encryption_Algorithm
